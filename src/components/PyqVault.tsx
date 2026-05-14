@@ -4,12 +4,27 @@ import { FC, useState, useMemo } from 'react';
 import { TOPICS, YIELD_COLORS } from '@/data/topics';
 import { QUESTIONS, type Question, type YieldLevel, type Difficulty, type SolutionStep } from '@/data/questions';
 import TopicChart from './TopicChart';
+import CircuitDiagram from './CircuitDiagram';
 
 interface PyqVaultProps {
   onNavigate: (tabId: string) => void;
 }
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 6;
+
+const TOPIC_COLORS: Record<string, { main: string; bg: string }> = {
+  bjt: { main: '#2563eb', bg: '#dbeafe' },
+  diodes: { main: '#d97706', bg: '#fef3c7' },
+  ac3phase: { main: '#0d9488', bg: '#ccfbf1' },
+  dc: { main: '#059669', bg: '#d1fae5' },
+  mosfet: { main: '#7c3aed', bg: '#ede9fe' },
+  opamps: { main: '#4338ca', bg: '#eef2ff' },
+  filters: { main: '#be185d', bg: '#fce7f3' },
+  transients: { main: '#64748b', bg: '#f1f5f9' },
+  semiconductors: { main: '#92400e', bg: '#fffbeb' },
+  transformers: { main: '#78716c', bg: '#f5f5f4' },
+  machines: { main: '#a3a3a3', bg: '#fafafa' },
+};
 
 const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
   const [selectedYear, setSelectedYear] = useState<string>('all');
@@ -40,11 +55,11 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
   );
 
   const getTopicColor = (topicId: string) => {
-    return TOPICS.find(t => t.id === topicId)?.color || '#8B867D';
+    return TOPIC_COLORS[topicId]?.main || TOPICS.find(t => t.id === topicId)?.color || '#8B867D';
   };
 
   const getTopicBgColor = (topicId: string) => {
-    return TOPICS.find(t => t.id === topicId)?.bgColor || '#F8FAFC';
+    return TOPIC_COLORS[topicId]?.bg || TOPICS.find(t => t.id === topicId)?.bgColor || '#F8FAFC';
   };
 
   const getYieldBadge = (level: YieldLevel) => {
@@ -197,7 +212,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
         </div>
 
         {/* Questions List */}
-        <div className="flex-1 space-y-3">
+        <div className="flex-1 space-y-4">
           {paginatedQuestions.length === 0 && (
             <div className="bg-cream border border-border-warm rounded-lg p-8 text-center font-ui text-muted-text">
               No questions match your filters. Try adjusting them.
@@ -205,20 +220,19 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
           )}
           {paginatedQuestions.map((q) => {
             const excluded = isExcluded(q.topicId);
+            const topicColor = getTopicColor(q.topicId);
+            const topicBgColor = getTopicBgColor(q.topicId);
             return (
               <div
                 key={q.id}
-                className={`bg-cream border border-border-warm rounded-lg overflow-hidden hover:shadow-md transition-shadow ${excluded ? 'opacity-50' : ''}`}
+                className={`bg-cream rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow ${excluded ? 'opacity-50' : ''}`}
+                style={{ borderLeft: `4px solid ${topicColor}` }}
               >
                 {/* Question Header */}
                 <button
                   className="w-full text-left p-4 flex gap-3"
                   onClick={() => setExpandedId(expandedId === q.id ? null : q.id)}
                 >
-                  <div
-                    className="w-1.5 shrink-0 rounded-full"
-                    style={{ backgroundColor: getTopicColor(q.topicId) }}
-                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className="font-ui text-[10px] font-semibold text-muted-text">
@@ -226,7 +240,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                       </span>
                       <span
                         className="font-ui text-[10px] font-semibold px-2 py-0.5 rounded-full text-cream"
-                        style={{ backgroundColor: getTopicColor(q.topicId) }}
+                        style={{ backgroundColor: topicColor }}
                       >
                         {q.subtopic}
                       </span>
@@ -241,7 +255,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                         {q.marks} marks
                       </span>
                     </div>
-                    <p className="font-body text-sm text-navy leading-relaxed">
+                    <p className="font-body text-sm text-navy leading-relaxed line-clamp-2">
                       {q.text}
                     </p>
                   </div>
@@ -255,9 +269,9 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                   </div>
                 </button>
 
-                {/* Expanded Solution */}
+                {/* Expanded Solution — Circuit Left + Steps Right */}
                 {expandedId === q.id && (
-                  <div className="px-4 pb-4 pl-6">
+                  <div className="px-4 pb-4">
                     {/* Excluded warning */}
                     {excluded && (
                       <div className="mb-3 p-3 bg-gray-100 border-2 border-gray-300 rounded-lg font-ui text-sm text-gray-600 font-semibold">
@@ -265,63 +279,91 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                       </div>
                     )}
 
-                    {/* Circuit Description */}
-                    {q.circuitDescription && (
-                      <div className="mb-3 p-3 rounded-lg border" style={{ backgroundColor: getTopicBgColor(q.topicId), borderColor: getTopicColor(q.topicId) + '40' }}>
-                        <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: getTopicColor(q.topicId) }}>
-                          🔌 Circuit Description
-                        </div>
-                        <p className="font-body text-sm text-navy leading-relaxed">{q.circuitDescription}</p>
-                      </div>
-                    )}
-
-                    {/* Key Trap Warning */}
-                    {q.keyTrap && (
-                      <div className="mb-3 p-3 bg-red-50 border-2 border-red-200 rounded-lg">
-                        <div className="font-ui text-[10px] font-bold text-red-700 uppercase tracking-wider mb-1">
-                          🚨 Common Trap
-                        </div>
-                        <p className="font-ui text-sm text-red-800">{q.keyTrap}</p>
-                      </div>
-                    )}
-
-                    {/* Step-by-step solution */}
-                    {q.detailedSteps && q.detailedSteps.length > 0 ? (
-                      <div className="space-y-2">
-                        <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
-                          📝 Step-by-Step Solution
-                        </div>
-                        {q.detailedSteps.map((step: SolutionStep) => (
-                          <StepCard key={step.stepNumber} step={step} topicColor={getTopicColor(q.topicId)} />
-                        ))}
-                      </div>
-                    ) : q.solution ? (
-                      <div className="bg-parchment border border-border-warm rounded-lg p-4">
-                        <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
-                          Solution Method
-                        </div>
-                        <p className="font-body text-sm text-navy leading-relaxed whitespace-pre-line">
-                          {q.solution}
-                        </p>
-                      </div>
-                    ) : null}
-
-                    {/* Final Answers */}
-                    {q.finalAnswers && q.finalAnswers.length > 0 && (
-                      <div className="mt-3 p-3 bg-emerald-50 border-2 border-emerald-300 rounded-lg">
-                        <div className="font-ui text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-1.5">
-                          ✅ Final Answers
-                        </div>
-                        <div className="space-y-1">
-                          {q.finalAnswers.map((ans, i) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <span className="font-ui text-xs text-emerald-500 mt-0.5">▸</span>
-                              <code className="font-mono text-sm text-emerald-900 font-semibold">{ans}</code>
+                    {/* Two-column layout: Circuit Left (40%) + Steps Right (56%) */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                      {/* LEFT: Circuit Diagram Panel */}
+                      <div className="md:w-[40%] shrink-0">
+                        {q.circuitSvg ? (
+                          <CircuitDiagram
+                            circuit={q.circuitSvg}
+                            topicColor={topicColor}
+                            topicBgColor={topicBgColor}
+                          />
+                        ) : q.circuitDescription ? (
+                          <div
+                            className="rounded-lg p-4 border h-full"
+                            style={{ backgroundColor: topicBgColor, borderColor: topicColor + '40' }}
+                          >
+                            <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: topicColor }}>
+                              🔌 Circuit Description
                             </div>
-                          ))}
-                        </div>
+                            <p className="font-body text-sm text-navy leading-relaxed">{q.circuitDescription}</p>
+                          </div>
+                        ) : (
+                          <div
+                            className="rounded-lg p-4 border h-full flex items-center justify-center"
+                            style={{ backgroundColor: topicBgColor, borderColor: topicColor + '40' }}
+                          >
+                            <div className="text-center">
+                              <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: topicColor }}>
+                                📐 Conceptual
+                              </div>
+                              <p className="font-body text-xs text-muted-text">No circuit diagram needed for this question</p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Key Trap Warning — below circuit */}
+                        {q.keyTrap && (
+                          <div className="mt-3 p-3 rounded-lg border-2 border-red-200 bg-red-50">
+                            <div className="font-ui text-[10px] font-bold text-red-700 uppercase tracking-wider mb-1">
+                              🚨 Common Trap
+                            </div>
+                            <p className="font-ui text-sm text-red-800 leading-relaxed">{q.keyTrap}</p>
+                          </div>
+                        )}
                       </div>
-                    )}
+
+                      {/* RIGHT: Step-by-Step Solution (56%) */}
+                      <div className="md:w-[56%] min-w-0">
+                        {q.detailedSteps && q.detailedSteps.length > 0 ? (
+                          <div className="space-y-2">
+                            <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
+                              📝 Step-by-Step Solution
+                            </div>
+                            {q.detailedSteps.map((step: SolutionStep) => (
+                              <StepCard key={step.stepNumber} step={step} topicColor={topicColor} />
+                            ))}
+                          </div>
+                        ) : q.solution ? (
+                          <div className="bg-parchment border border-border-warm rounded-lg p-4">
+                            <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
+                              Solution Method
+                            </div>
+                            <p className="font-body text-sm text-navy leading-relaxed whitespace-pre-line">
+                              {q.solution}
+                            </p>
+                          </div>
+                        ) : null}
+
+                        {/* Final Answers — highlighted box */}
+                        {q.finalAnswers && q.finalAnswers.length > 0 && (
+                          <div className="mt-3 p-3 rounded-lg border-2" style={{ backgroundColor: '#ecfdf5', borderColor: '#6ee7b7' }}>
+                            <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: '#059669' }}>
+                              ✅ Final Answers
+                            </div>
+                            <div className="space-y-1">
+                              {q.finalAnswers.map((ans, i) => (
+                                <div key={i} className="flex items-start gap-2">
+                                  <span className="font-ui text-xs mt-0.5" style={{ color: '#059669' }}>▸</span>
+                                  <code className="font-mono text-sm font-bold" style={{ color: '#065f46' }}>{ans}</code>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -372,11 +414,11 @@ const StepCard: FC<StepCardProps> = ({ step, topicColor }) => {
   const style = getStepStyle();
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-2">
       {/* Step number badge */}
       <div className="flex flex-col items-center shrink-0">
         <div
-          className="w-7 h-7 rounded-full flex items-center justify-center font-ui text-[11px] font-bold text-white"
+          className="w-6 h-6 rounded-full flex items-center justify-center font-ui text-[10px] font-bold text-white"
           style={{ backgroundColor: style.badgeBg }}
         >
           {style.badge}
@@ -385,33 +427,33 @@ const StepCard: FC<StepCardProps> = ({ step, topicColor }) => {
 
       {/* Step content */}
       <div
-        className="flex-1 rounded-lg p-3 border-l-[3px]"
+        className="flex-1 rounded-lg p-2.5 border-l-[3px]"
         style={{ backgroundColor: style.bg, borderLeftColor: style.badgeBg }}
       >
-        <div className="flex items-center gap-2 mb-1">
-          <span className="font-ui text-xs font-semibold text-navy">{step.label}</span>
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="font-ui text-[11px] font-semibold text-navy">{step.label}</span>
           {step.isVerification && (
-            <span className="font-ui text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+            <span className="font-ui text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
               VERIFY
             </span>
           )}
           {step.isWarning && (
-            <span className="font-ui text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">
+            <span className="font-ui text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">
               TRAP
             </span>
           )}
           {step.isAnswer && (
-            <span className="font-ui text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800">
+            <span className="font-ui text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800">
               ANSWER
             </span>
           )}
         </div>
         {step.calculation && (
-          <div className="font-mono text-xs text-muted-text leading-relaxed mb-1 whitespace-pre-line">
+          <div className="font-mono text-[11px] text-muted-text leading-relaxed mb-0.5 whitespace-pre-line">
             {step.calculation}
           </div>
         )}
-        <div className={`font-mono text-sm leading-relaxed ${step.isAnswer ? 'font-bold text-emerald-800' : step.isWarning ? 'text-red-800' : 'text-navy'}`}>
+        <div className={`font-mono text-[12px] leading-relaxed ${step.isAnswer ? 'font-bold text-emerald-800' : step.isWarning ? 'text-red-800 font-semibold' : 'text-navy'}`}>
           {step.result}
         </div>
       </div>

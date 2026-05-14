@@ -1,37 +1,83 @@
-# Task 1 - EEE F111 Study Website - Main Agent
+# Task: Rebuild PYQ Vault with Complete Solved Questions
 
 ## Summary
-Built a comprehensive study website for EEE F111 Electrical Sciences Comprehensive Exam at BITS Pilani. The site is fully functional with 6 tabs, warm parchment design, and all required features.
+Rebuilt the PYQ Vault with comprehensive solved questions from all 6 comprehensive exams (Dec 2023, May 2024, Dec 2024, May 2025, Dec 2025). Each solution follows the LaTeX "circuit-left + steps-right" pattern.
 
-## Architecture
-- **Framework**: Next.js 16 App Router with TypeScript
-- **Styling**: Tailwind CSS 4 with custom warm parchment theme (#F4F1EA bg, #FCFBF8 cream, #1A2A3A navy)
-- **Fonts**: EB Garamond (headings), Merriweather (body), Chivo (UI) via next/font/google
-- **Charts**: Recharts for grouped bar charts
-- **Data**: All hardcoded in src/data/ files
+## Files Modified/Created
 
-## Files Created
-- `src/data/topics.ts` - Topic definitions, colors, marks-by-year data
-- `src/data/questions.ts` - 50+ PYQ questions from 5 exams with solutions
-- `src/data/traps.ts` - 23 trap cards (common mistakes)
-- `src/data/methods.ts` - 5 method maps (step-by-step procedures)
-- `src/data/circuits.ts` - 22 circuit topologies
-- `src/components/TabNavigation.tsx` - Sticky tab navigation
-- `src/components/WarRoom.tsx` - Dashboard with exam pattern, heat map, triage
-- `src/components/TopicChart.tsx` - Grouped bar chart (KEY FEATURE)
-- `src/components/PyqVault.tsx` - PYQ browser with filters and pagination
-- `src/components/CheatSheet.tsx` - Collapsible formula cards
-- `src/components/MethodMaps.tsx` - Step-by-step analysis procedures
-- `src/components/CircuitAtlas.tsx` - Circuit topology gallery
-- `src/components/TrapCards.tsx` - Flip-card warnings
-- `src/app/page.tsx` - Main page with tab routing
-- `src/app/layout.tsx` - Root layout with Google Fonts
-- `src/app/globals.css` - Custom parchment theme CSS
+### 1. `/src/data/questions.ts` - COMPLETE REWRITE
+- Added `CircuitParams` type for SVG circuit descriptions
+- Added `circuitSvg` field to `Question` interface
+- **35+ fully solved questions** across all 6 exams with:
+  - Complete question text with exact numerical values
+  - Step-by-step numerical solutions with intermediate calculations
+  - Final answers with exact values
+  - Circuit descriptions and SVG type identifiers
+  - Key traps and warnings
+  - Verification steps marked
 
-## Key Design Decisions
-1. Warm parchment palette per user's mockup
-2. Topic color-coding: BJT=blue, Diodes=amber, AC=teal, DC=emerald, MOSFET=purple, OpAmp=indigo, Filters=crimson, Transients=slate
-3. Yield badges: High=#8B0000, Mid=#CD5C5C, Low=#E9967A
-4. Excluded topics (Transformers/Machines) shown in grey on charts
-5. Post-midsem and pre-midsem-extra badges on relevant topics
-6. Lint passes clean, all components compile
+### 2. `/src/components/CircuitDiagram.tsx` - NEW COMPONENT
+- Renders SVG circuit diagrams inline based on `CircuitParams.type`
+- Supports 25+ circuit types:
+  - Two NPN Cascade (multiple variants)
+  - PNP+NPN Mixed
+  - Darlington Pair
+  - VDB (Voltage Divider Bias)
+  - Zener Regulator
+  - Two Zener Parallel
+  - Two Diode Series
+  - Diode+Zener Combo
+  - PF Correction circuits
+  - Parallel AC Loads
+  - Y-Delta Conversion
+  - Y-3Phase and Y-Delta-3Phase
+  - Simple DC Loop, Mesh 4-Loop, Superposition
+  - RC Discharge, RL Switch, RLC circuits
+  - E-MOSFET, Two FET Series, E-MOSFET+D-MOSFET
+  - Op-Amp circuits
+  - Generic fallback
+- Helper SVG components: Resistor, NPN, PNP, ZenerDiode, DiodeSymbol, Ground, VSource, Capacitor, Inductor, MOSFET, OpAmp
+
+### 3. `/src/components/PyqVault.tsx` - COMPLETE REBUILD
+- **Circuit-left (40%) + Steps-right (56%) layout** matching LaTeX template
+- Color-coded boxes for each topic (BJT=Blue, Diodes=Amber, AC=Teal, DC=Emerald, MOSFET=Purple, Op-Amps=Indigo, Filters=Crimson, Transients=SlateGray)
+- SVG circuit diagrams rendered inline in left panel
+- Step numbers with verification marks (✓) and answer highlights (★)
+- Trap warnings (⚠) in red boxes below circuit
+- Final answers highlighted in green boxes
+- Mathematical notation using unicode
+- Pagination (6 per page for expanded view)
+- All filters preserved (Year, Topic, Yield, Difficulty, Search)
+
+## Topic Color System (from LaTeX)
+| Topic | Main Color | BG Color |
+|-------|-----------|----------|
+| BJT | #2563eb (ElectricBlue) | #dbeafe (SkyBlueBG) |
+| Diodes | #d97706 (Amber) | #fef3c7 (AmberBG) |
+| AC/3-Phase | #0d9488 (Teal) | #ccfbf1 (TealBG) |
+| DC Circuits | #059669 (Emerald) | #d1fae5 (EmeraldBG) |
+| MOSFET | #7c3aed (Purple) | #ede9fe (PurpleBG) |
+| Op-Amps | #4338ca (Indigo) | #eef2ff |
+| Filters | #be185d (Crimson) | #fce7f3 |
+| Transients | #64748b (SlateGray) | #f1f5f9 |
+
+## Exam Coverage
+- Dec 2023: PF Correction, Two Zener, Two NPN Cascade, Y-Delta, Parallel Loads, RC Discharge, Series/Parallel RLC, Op-Amp
+- May 2024: Diode IS, Zener Regulator, Min hFE Cascade, Y-3Phase, D-MOSFET combo
+- Dec 2024: MOSFET T/F, BJT Cutoff, RL Time Const, PF Correction (C), pnp+npn, Two JFETs, Mesh Analysis, Zener Switch
+- May 2025: Superposition, Diode+Zener, Darlington Pair, E-MOSFET+D-MOSFET
+- Dec 2025: Transients, Transfer Function, Two Diodes+Dynamic R, VDB+Leakage, Y-Delta 3Phase, Phase Diff, MOSFET/BJT/Diode shorts
+
+## Existing Components - Verified Working
+- page.tsx ✅
+- TabNavigation.tsx ✅
+- WarRoom.tsx ✅
+- CheatSheet.tsx ✅
+- MethodMaps.tsx ✅
+- CircuitAtlas.tsx ✅
+- TrapCards.tsx ✅
+- TopicChart.tsx ✅
+- globals.css ✅ (unchanged)
+- topics.ts ✅ (unchanged)
+
+## Lint Status: PASSING ✅
