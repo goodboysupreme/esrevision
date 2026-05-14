@@ -1,0 +1,196 @@
+export interface Topic {
+  id: string;
+  name: string;
+  shortName: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  category: 'post-midsem' | 'pre-midsem-extra' | 'pre-midsem-core' | 'excluded';
+  categoryLabel: string;
+  yieldLevel: 'high' | 'mid' | 'low';
+  yieldLabel: string;
+  examsAppeared: number;
+  totalMarks: number;
+}
+
+export const TOPICS: Topic[] = [
+  {
+    id: 'bjt',
+    name: 'BJT',
+    shortName: 'BJT',
+    color: '#2563eb',
+    bgColor: '#eff6ff',
+    borderColor: '#2563eb',
+    category: 'post-midsem',
+    categoryLabel: 'Post-Midsem',
+    yieldLevel: 'high',
+    yieldLabel: 'High Yield',
+    examsAppeared: 5,
+    totalMarks: 84,
+  },
+  {
+    id: 'diodes',
+    name: 'Diodes',
+    shortName: 'Diodes',
+    color: '#d97706',
+    bgColor: '#fffbeb',
+    borderColor: '#d97706',
+    category: 'post-midsem',
+    categoryLabel: 'Post-Midsem',
+    yieldLevel: 'high',
+    yieldLabel: 'High Yield',
+    examsAppeared: 5,
+    totalMarks: 101,
+  },
+  {
+    id: 'mosfet',
+    name: 'MOSFET/FET',
+    shortName: 'MOSFET',
+    color: '#7c3aed',
+    bgColor: '#f5f3ff',
+    borderColor: '#7c3aed',
+    category: 'post-midsem',
+    categoryLabel: 'Post-Midsem',
+    yieldLevel: 'high',
+    yieldLabel: 'High Yield',
+    examsAppeared: 5,
+    totalMarks: 88,
+  },
+  {
+    id: 'ac3phase',
+    name: 'AC / 3-Phase',
+    shortName: 'AC/3Φ',
+    color: '#0d9488',
+    bgColor: '#f0fdfa',
+    borderColor: '#0d9488',
+    category: 'pre-midsem-core',
+    categoryLabel: 'Pre-Midsem (Core)',
+    yieldLevel: 'mid',
+    yieldLabel: 'Mid Yield',
+    examsAppeared: 4,
+    totalMarks: 74,
+  },
+  {
+    id: 'dc',
+    name: 'DC / Network Theorems',
+    shortName: 'DC/Thev',
+    color: '#059669',
+    bgColor: '#ecfdf5',
+    borderColor: '#059669',
+    category: 'pre-midsem-core',
+    categoryLabel: 'Pre-Midsem (Core)',
+    yieldLevel: 'mid',
+    yieldLabel: 'Mid Yield',
+    examsAppeared: 4,
+    totalMarks: 55,
+  },
+  {
+    id: 'filters',
+    name: 'Filters / Resonance',
+    shortName: 'Filters',
+    color: '#be185d',
+    bgColor: '#fdf2f8',
+    borderColor: '#be185d',
+    category: 'pre-midsem-extra',
+    categoryLabel: 'Pre-Midsem (Not in Midsem)',
+    yieldLevel: 'mid',
+    yieldLabel: 'Mid Yield',
+    examsAppeared: 4,
+    totalMarks: 38,
+  },
+  {
+    id: 'transients',
+    name: 'Transients',
+    shortName: 'Trans',
+    color: '#64748b',
+    bgColor: '#f8fafc',
+    borderColor: '#64748b',
+    category: 'pre-midsem-extra',
+    categoryLabel: 'Pre-Midsem (Not in Midsem)',
+    yieldLevel: 'low',
+    yieldLabel: 'Low Yield',
+    examsAppeared: 3,
+    totalMarks: 28,
+  },
+  {
+    id: 'opamps',
+    name: 'Op-Amps',
+    shortName: 'Op-Amp',
+    color: '#4338ca',
+    bgColor: '#eef2ff',
+    borderColor: '#4338ca',
+    category: 'post-midsem',
+    categoryLabel: 'Post-Midsem',
+    yieldLevel: 'low',
+    yieldLabel: 'Low Yield',
+    examsAppeared: 3,
+    totalMarks: 26,
+  },
+  {
+    id: 'transformers',
+    name: 'Transformers / Magnetic',
+    shortName: 'Transf',
+    color: '#78716c',
+    bgColor: '#f5f5f4',
+    borderColor: '#78716c',
+    category: 'excluded',
+    categoryLabel: 'EXCLUDED',
+    yieldLevel: 'high',
+    yieldLabel: 'EXCLUDED',
+    examsAppeared: 5,
+    totalMarks: 114,
+  },
+  {
+    id: 'machines',
+    name: 'Machines',
+    shortName: 'Mach',
+    color: '#a3a3a3',
+    bgColor: '#fafafa',
+    borderColor: '#a3a3a3',
+    category: 'excluded',
+    categoryLabel: 'EXCLUDED',
+    yieldLevel: 'low',
+    yieldLabel: 'EXCLUDED',
+    examsAppeared: 2,
+    totalMarks: 10,
+  },
+  {
+    id: 'semiconductors',
+    name: 'Semiconductors',
+    shortName: 'Semi',
+    color: '#92400e',
+    bgColor: '#fffbeb',
+    borderColor: '#92400e',
+    category: 'post-midsem',
+    categoryLabel: 'Post-Midsem',
+    yieldLevel: 'low',
+    yieldLabel: 'Low Yield',
+    examsAppeared: 1,
+    totalMarks: 6,
+  },
+];
+
+export const YIELD_COLORS = {
+  high: '#8B0000',
+  mid: '#CD5C5C',
+  low: '#E9967A',
+  excluded: '#78716c',
+} as const;
+
+export const EXAM_YEARS = ['Dec 2023', 'May 2024', 'Dec 2024', 'May 2025', 'Dec 2025'] as const;
+
+export type ExamYear = (typeof EXAM_YEARS)[number];
+
+export const TOPIC_MARKS_BY_YEAR: Record<string, Record<ExamYear, number>> = {
+  BJT: { 'Dec 2023': 17, 'May 2024': 15, 'Dec 2024': 16, 'May 2025': 18, 'Dec 2025': 18 },
+  Diodes: { 'Dec 2023': 24, 'May 2024': 20, 'Dec 2024': 15, 'May 2025': 18, 'Dec 2025': 24 },
+  'AC/3-Phase': { 'Dec 2023': 19, 'May 2024': 20, 'Dec 2024': 16, 'May 2025': 0, 'Dec 2025': 19 },
+  'DC/Theorems': { 'Dec 2023': 14, 'May 2024': 0, 'Dec 2024': 18, 'May 2025': 20, 'Dec 2025': 3 },
+  'MOSFET/FET': { 'Dec 2023': 20, 'May 2024': 15, 'Dec 2024': 22, 'May 2025': 16, 'Dec 2025': 15 },
+  'Op-Amps': { 'Dec 2023': 6, 'May 2024': 10, 'Dec 2024': 0, 'May 2025': 0, 'Dec 2025': 10 },
+  'Filters/Res': { 'Dec 2023': 6, 'May 2024': 15, 'Dec 2024': 7, 'May 2025': 0, 'Dec 2025': 10 },
+  Transients: { 'Dec 2023': 12, 'May 2024': 0, 'Dec 2024': 1, 'May 2025': 0, 'Dec 2025': 15 },
+  'Transf/Mag': { 'Dec 2023': 17, 'May 2024': 40, 'Dec 2024': 21, 'May 2025': 18, 'Dec 2025': 18 },
+  Machines: { 'Dec 2023': 2, 'May 2024': 0, 'Dec 2024': 8, 'May 2025': 0, 'Dec 2025': 0 },
+  Semiconductors: { 'Dec 2023': 0, 'May 2024': 0, 'Dec 2024': 6, 'May 2025': 0, 'Dec 2025': 0 },
+};
