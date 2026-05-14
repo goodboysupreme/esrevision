@@ -61,7 +61,7 @@ const WarRoom: FC<WarRoomProps> = ({ onNavigate }) => {
           🔥 Topic Heat Map — Marks Distribution
         </h2>
         <p className="font-ui text-sm text-muted-text mb-4">
-          Grouped bar chart showing marks per topic across 5 comprehensive exams (Dec 2023 – Dec 2025)
+          Grouped bar chart showing marks per topic across 6 comprehensive exams (July 2023 – Dec 2025)
         </p>
         <TopicChart showExcluded={true} height={450} />
       </div>

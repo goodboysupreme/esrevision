@@ -136,6 +136,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                 className="w-full bg-parchment border border-border-warm rounded px-3 py-1.5 font-ui text-sm text-navy focus:outline-none focus:border-navy"
               >
                 <option value="all">All Years</option>
+                <option value="July 2023">July 2023</option>
                 <option value="Dec 2023">Dec 2023</option>
                 <option value="May 2024">May 2024</option>
                 <option value="Dec 2024">Dec 2024</option>
@@ -283,7 +284,22 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                     <div className="flex flex-col md:flex-row gap-4">
                       {/* LEFT: Circuit Diagram Panel */}
                       <div className="md:w-[40%] shrink-0">
-                        {q.circuitSvg ? (
+                        {q.circuitImage ? (
+                          <div
+                            className="rounded-lg p-3 border h-full"
+                            style={{ backgroundColor: topicBgColor, borderColor: topicColor + '40' }}
+                          >
+                            <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: topicColor }}>
+                              🔌 Circuit Diagram
+                            </div>
+                            <img
+                              src={q.circuitImage}
+                              alt={`Circuit diagram for ${q.questionNumber}`}
+                              className="w-full h-auto rounded"
+                              style={{ maxHeight: '320px', objectFit: 'contain' }}
+                            />
+                          </div>
+                        ) : q.circuitSvg ? (
                           <CircuitDiagram
                             circuit={q.circuitSvg}
                             topicColor={topicColor}

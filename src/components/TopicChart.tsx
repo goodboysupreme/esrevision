@@ -20,6 +20,7 @@ interface TopicChartProps {
 }
 
 const YEAR_COLORS: Record<ExamYear, string> = {
+  'July 2023': '#6b7280',
   'Dec 2023': '#8B4513',
   'May 2024': '#2563eb',
   'Dec 2024': '#059669',

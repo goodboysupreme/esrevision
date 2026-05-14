@@ -43,7 +43,7 @@ export default function Home() {
             EEE F111 Electrical Sciences · BITS Pilani · Comprehensive Exam Prep
           </div>
           <div className="font-ui text-xs text-muted-text">
-            Based on analysis of 5 comprehensive exams (Dec 2023 – Dec 2025)
+            Based on analysis of 6 comprehensive exams (July 2023 – Dec 2025)
           </div>
         </div>
       </footer>

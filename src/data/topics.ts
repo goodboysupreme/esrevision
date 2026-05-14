@@ -137,8 +137,8 @@ export const TOPICS: Topic[] = [
     categoryLabel: 'EXCLUDED',
     yieldLevel: 'high',
     yieldLabel: 'EXCLUDED',
-    examsAppeared: 5,
-    totalMarks: 114,
+    examsAppeared: 6,
+    totalMarks: 139,
   },
   {
     id: 'machines',
@@ -165,8 +165,8 @@ export const TOPICS: Topic[] = [
     categoryLabel: 'Post-Midsem',
     yieldLevel: 'low',
     yieldLabel: 'Low Yield',
-    examsAppeared: 1,
-    totalMarks: 6,
+    examsAppeared: 2,
+    totalMarks: 21,
   },
 ];
 
@@ -177,20 +177,20 @@ export const YIELD_COLORS = {
   excluded: '#78716c',
 } as const;
 
-export const EXAM_YEARS = ['Dec 2023', 'May 2024', 'Dec 2024', 'May 2025', 'Dec 2025'] as const;
+export const EXAM_YEARS = ['July 2023', 'Dec 2023', 'May 2024', 'Dec 2024', 'May 2025', 'Dec 2025'] as const;
 
 export type ExamYear = (typeof EXAM_YEARS)[number];
 
 export const TOPIC_MARKS_BY_YEAR: Record<string, Record<ExamYear, number>> = {
-  BJT: { 'Dec 2023': 17, 'May 2024': 15, 'Dec 2024': 16, 'May 2025': 18, 'Dec 2025': 18 },
-  Diodes: { 'Dec 2023': 24, 'May 2024': 20, 'Dec 2024': 15, 'May 2025': 18, 'Dec 2025': 24 },
-  'AC/3-Phase': { 'Dec 2023': 19, 'May 2024': 20, 'Dec 2024': 16, 'May 2025': 0, 'Dec 2025': 19 },
-  'DC/Theorems': { 'Dec 2023': 14, 'May 2024': 0, 'Dec 2024': 18, 'May 2025': 20, 'Dec 2025': 3 },
-  'MOSFET/FET': { 'Dec 2023': 20, 'May 2024': 15, 'Dec 2024': 22, 'May 2025': 16, 'Dec 2025': 15 },
-  'Op-Amps': { 'Dec 2023': 6, 'May 2024': 10, 'Dec 2024': 0, 'May 2025': 0, 'Dec 2025': 10 },
-  'Filters/Res': { 'Dec 2023': 6, 'May 2024': 15, 'Dec 2024': 7, 'May 2025': 0, 'Dec 2025': 10 },
-  Transients: { 'Dec 2023': 12, 'May 2024': 0, 'Dec 2024': 1, 'May 2025': 0, 'Dec 2025': 15 },
-  'Transf/Mag': { 'Dec 2023': 17, 'May 2024': 40, 'Dec 2024': 21, 'May 2025': 18, 'Dec 2025': 18 },
-  Machines: { 'Dec 2023': 2, 'May 2024': 0, 'Dec 2024': 8, 'May 2025': 0, 'Dec 2025': 0 },
-  Semiconductors: { 'Dec 2023': 0, 'May 2024': 0, 'Dec 2024': 6, 'May 2025': 0, 'Dec 2025': 0 },
+  BJT: { 'July 2023': 25, 'Dec 2023': 17, 'May 2024': 15, 'Dec 2024': 16, 'May 2025': 18, 'Dec 2025': 18 },
+  Diodes: { 'July 2023': 15, 'Dec 2023': 24, 'May 2024': 20, 'Dec 2024': 15, 'May 2025': 18, 'Dec 2025': 24 },
+  'AC/3-Phase': { 'July 2023': 15, 'Dec 2023': 19, 'May 2024': 20, 'Dec 2024': 16, 'May 2025': 0, 'Dec 2025': 19 },
+  'DC/Theorems': { 'July 2023': 25, 'Dec 2023': 14, 'May 2024': 0, 'Dec 2024': 18, 'May 2025': 20, 'Dec 2025': 3 },
+  'MOSFET/FET': { 'July 2023': 0, 'Dec 2023': 20, 'May 2024': 15, 'Dec 2024': 22, 'May 2025': 16, 'Dec 2025': 15 },
+  'Op-Amps': { 'July 2023': 15, 'Dec 2023': 6, 'May 2024': 10, 'Dec 2024': 0, 'May 2025': 0, 'Dec 2025': 10 },
+  'Filters/Res': { 'July 2023': 0, 'Dec 2023': 6, 'May 2024': 15, 'Dec 2024': 7, 'May 2025': 0, 'Dec 2025': 10 },
+  Transients: { 'July 2023': 0, 'Dec 2023': 12, 'May 2024': 0, 'Dec 2024': 1, 'May 2025': 0, 'Dec 2025': 15 },
+  'Transf/Mag': { 'July 2023': 25, 'Dec 2023': 17, 'May 2024': 40, 'Dec 2024': 21, 'May 2025': 18, 'Dec 2025': 18 },
+  Machines: { 'July 2023': 0, 'Dec 2023': 2, 'May 2024': 0, 'Dec 2024': 8, 'May 2025': 0, 'Dec 2025': 0 },
+  Semiconductors: { 'July 2023': 15, 'Dec 2023': 0, 'May 2024': 0, 'Dec 2024': 6, 'May 2025': 0, 'Dec 2025': 0 },
 };

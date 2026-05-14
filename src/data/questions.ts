@@ -35,19 +35,54 @@ export interface Question {
   finalAnswers?: string[];
   circuitDescription?: string;
   circuitSvg?: CircuitParams;
+  circuitImage?: string; // path to schemdraw-generated PNG in /circuits/
   keyTrap?: string;
 }
 
 export const QUESTIONS: Question[] = [
 
   // ═══════════════════════════════════════════════════════════════
-  // JULY 2023 (Dec 2023 in data)
+  // JULY 2023 (Paper 1155)
   // ═══════════════════════════════════════════════════════════════
 
   {
+    id: 'j23-q1',
+    exam: 'July 2023',
+    year: 'July 2023',
+    part: 'full',
+    questionNumber: 'Q1',
+    topic: 'DC / Network Theorems',
+    topicId: 'dc',
+    subtopic: 'DC Circuit Analysis — Node Voltages',
+    marks: 25,
+    yieldLevel: 'high',
+    difficulty: 'hard',
+    text: 'In the given DC circuit, a 50V source is connected to nodes a, b, c through resistors of 15Ω, 3Ω, and 5Ω respectively. Find the voltage at each node and all branch currents using nodal analysis.',
+    circuitDescription: 'DC circuit with 50V source and three nodes a, b, c connected through 15Ω (between source and node a), 3Ω (between nodes a and b), and 5Ω (between nodes b and c) resistors.',
+    circuitSvg: {
+      type: 'dc_3node',
+      components: { vs: '50V', r1: '15Ω', r2: '3Ω', r3: '5Ω' },
+      labels: { n1: 'a', n2: 'b', n3: 'c' }
+    },
+    detailedSteps: [
+      { stepNumber: 1, label: 'Identify nodes and assign voltages', calculation: 'Let Va, Vb, Vc be node voltages. Node a is connected to 50V through 15Ω, node b through 3Ω to node a, node c through 5Ω to node b.', result: 'Three node voltages: Va, Vb, Vc' },
+      { stepNumber: 2, label: 'Write KCL at node a', calculation: 'KCL at node a: (50 - Va)/15 = (Va - Vb)/3\n3(50 - Va) = 15(Va - Vb)\n150 - 3Va = 15Va - 15Vb', result: '150 = 18Va - 15Vb ... (1)' },
+      { stepNumber: 3, label: 'Write KCL at node b', calculation: 'KCL at node b: (Va - Vb)/3 = (Vb - Vc)/5\n5(Va - Vb) = 3(Vb - Vc)\n5Va - 5Vb = 3Vb - 3Vc', result: '5Va - 8Vb + 3Vc = 0 ... (2)' },
+      { stepNumber: 4, label: 'Write KCL at node c (or boundary condition)', calculation: 'If node c connects to ground or another element: apply appropriate condition.\nAssuming Vc = 0 (ground reference):', result: 'Vc = 0 (ground reference)' },
+      { stepNumber: 5, label: 'Solve the system of equations', calculation: 'From eq (2) with Vc = 0: 5Va - 8Vb = 0 → Va = 8Vb/5\nSubstitute into eq (1): 150 = 18(8Vb/5) - 15Vb\n150 = 144Vb/5 - 15Vb = (144Vb - 75Vb)/5 = 69Vb/5\nVb = 750/69 = 10.87 V', result: 'Vb = 10.87 V', isAnswer: true },
+      { stepNumber: 6, label: 'Find Va', calculation: 'Va = 8Vb/5 = 8×10.87/5 = 86.96/5', result: 'Va = 17.39 V', isAnswer: true },
+      { stepNumber: 7, label: 'Find branch currents', calculation: 'I_source = (50 - Va)/15 = (50 - 17.39)/15 = 32.61/15\nI_ab = (Va - Vb)/3 = (17.39 - 10.87)/3 = 6.52/3\nI_bc = (Vb - Vc)/5 = 10.87/5', result: 'I_source = 2.17 A, I_ab = 2.17 A, I_bc = 2.17 A', isAnswer: true },
+      { stepNumber: 8, label: 'Verify KCL', calculation: 'At node a: I_in = (50-17.39)/15 = 2.17 A, I_out = (17.39-10.87)/3 = 2.17 A ✓\nAt node b: I_in = 2.17 A, I_out = 10.87/5 = 2.17 A ✓', result: 'KCL verified at all nodes ✓', isVerification: true },
+    ],
+    finalAnswers: ['Va = 17.39 V', 'Vb = 10.87 V', 'Vc = 0 V (ground)', 'I = 2.17 A through all branches'],
+    circuitImage: '/circuits/dc_2023_q1.png',
+    keyTrap: 'In a single-path series circuit, current is the same through all elements. Use KVL or simple voltage division for verification.',
+  },
+
+  {
     id: 'j23-q2b',
-    exam: 'Dec 2023',
-    year: 'Dec 2023',
+    exam: 'July 2023',
+    year: 'July 2023',
     part: 'full',
     questionNumber: 'Q2(b)',
     topic: 'AC / 3-Phase',
@@ -79,8 +114,8 @@ export const QUESTIONS: Question[] = [
 
   {
     id: 'j23-q4a',
-    exam: 'Dec 2023',
-    year: 'Dec 2023',
+    exam: 'July 2023',
+    year: 'July 2023',
     part: 'full',
     questionNumber: 'Q4(a)',
     topic: 'Diodes',
@@ -104,13 +139,14 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 5, label: 'Verify parallel analysis', calculation: 'Both diodes share the same voltage node. Since VZ = 8V for both and VS = 10V > VZ, both can be in breakdown simultaneously if no series R.', result: 'Multiple valid states exist — depends on circuit details ✓', isVerification: true, isWarning: true },
     ],
     finalAnswers: ['Condition 2: v₁=8V, v₂=2V, i≈−IS₂=−10nA', 'Condition 3: v₂=8V, v₁=2V, i≈−IS₁=−5nA'],
+    circuitImage: '/circuits/diode_2023_q4a.png',
     keyTrap: 'For parallel Zeners with same VZ and VS > VZ: both can breakdown. With different IS, the one with higher IS dominates the reverse current in the non-breakdown case.',
   },
 
   {
     id: 'j23-q5',
-    exam: 'Dec 2023',
-    year: 'Dec 2023',
+    exam: 'July 2023',
+    year: 'July 2023',
     part: 'full',
     questionNumber: 'Q5',
     topic: 'BJT',
@@ -137,6 +173,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 8, label: 'Find hFE(min) for saturation', calculation: 'hFE(min) = IC(sat)/IB = 5.8/0.05217', result: 'hFE(min) ≈ 111', isAnswer: true },
     ],
     finalAnswers: ['IB1 = 5.32 μA', 'IC1 = 0.532 mA', 'VCE1 = 4.39 V (Active ✓)', 'VB2 = 5.468 V', 'VE2 = 4.768 V', 'hFE(min) = 111 (at VBB=13V)'],
+    circuitImage: '/circuits/bjt_2023_q5.png',
     keyTrap: 'Always verify VCE > 0.2V after calculating! If VCE < 0.2V → recalculate in saturation mode.',
   },
 
@@ -288,6 +325,39 @@ export const QUESTIONS: Question[] = [
 
   // --- PART B ---
   {
+    id: 'd23f-b2',
+    exam: 'Dec 2023',
+    year: 'Dec 2023',
+    part: 'B',
+    questionNumber: 'Q2',
+    topic: 'Diodes',
+    topicId: 'diodes',
+    subtopic: 'Half-Wave Rectifier Analysis',
+    marks: 18,
+    yieldLevel: 'high',
+    difficulty: 'hard',
+    text: 'A half-wave rectifier circuit has Vs = 15sin(ωt) V, with a silicon diode (Vd = 0.7V) and load RL. Find: (i) the peak output voltage, (ii) average (DC) output voltage, (iii) RMS output voltage, (iv) ripple factor, (v) diode PIV, (vi) efficiency.',
+    circuitDescription: 'Half-wave rectifier: AC source Vs = 15sin(ωt) → diode (Si, Vd = 0.7V) → load RL. Diode conducts only during positive half cycle.',
+    circuitSvg: {
+      type: 'half_wave_rectifier',
+      components: { vs: '15sin(ωt)', vd: '0.7V', rl: 'RL' },
+      labels: { title: 'Half-Wave Rectifier' }
+    },
+    detailedSteps: [
+      { stepNumber: 1, label: 'Find peak output voltage', calculation: 'Vm = 15V (peak of input)\nVo(peak) = Vm - Vd = 15 - 0.7', result: 'Vo(peak) = 14.3 V', isAnswer: true },
+      { stepNumber: 2, label: 'Find average (DC) output voltage', calculation: 'Vdc = Vo(peak)/π = 14.3/π', result: 'Vdc = 4.55 V', isAnswer: true },
+      { stepNumber: 3, label: 'Find RMS output voltage', calculation: 'Vrms = Vo(peak)/2 = 14.3/2', result: 'Vrms = 7.15 V', isAnswer: true },
+      { stepNumber: 4, label: 'Find ripple factor', calculation: 'γ = √(Vrms²/Vdc² - 1) = √(7.15²/4.55² - 1) = √(2.47 - 1) = √1.47\nAlternatively: γ = √(π²/4 - 1) = √(2.467 - 1) = √1.467', result: 'γ = 1.21 (for ideal HWR)', isAnswer: true },
+      { stepNumber: 5, label: 'Find PIV of diode', calculation: 'During negative half-cycle: diode reverse-biased.\nPIV = Vm = 15V (peak inverse voltage across diode)', result: 'PIV = 15 V', isAnswer: true },
+      { stepNumber: 6, label: 'Find rectification efficiency', calculation: 'η = (Vdc²/RL) / (Vrms²/RL) × 100% = (Vdc/Vrms)² × 100%\n= (4.55/7.15)² × 100% = 0.4059 × 100%\nIdeal: η = (1/π)²/(1/2) = 4/π² = 40.6%', result: 'η = 40.6%', isAnswer: true },
+      { stepNumber: 7, label: 'Verify with ideal formulas', calculation: 'Half-wave rectifier (ideal):\nVdc/Vm = 1/π = 31.83%\nVrms/Vm = 1/2 = 50%\nγ = 1.21\nη = 40.6%', result: 'All values consistent with HWR theory ✓', isVerification: true },
+    ],
+    finalAnswers: ['Vo(peak) = 14.3 V', 'Vdc = 4.55 V', 'Vrms = 7.15 V', 'γ = 1.21', 'PIV = 15 V', 'η = 40.6%'],
+    circuitImage: '/circuits/diode_2024feb_q2.png',
+    keyTrap: 'HWR: Vdc = Vm/π (NOT Vm/2!). Ripple factor γ = 1.21 is very high — that\'s why HWR is rarely used in practice without filtering.',
+  },
+
+  {
     id: 'd23f-b3',
     exam: 'Dec 2023',
     year: 'Dec 2023',
@@ -316,6 +386,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 7, label: 'Find VCE2 and verify active', calculation: 'VCE2 = VCC - IC2×RC2 - IE2×RE2 = 12 - 4.13(1) - 4.16(1) = 12 - 4.13 - 4.16', result: 'VCE2 = 3.71 V > 0.2V → Active ✓', isAnswer: true, isVerification: true },
     ],
     finalAnswers: ['IB1 = 59.5 μA, IC1 = 7.14 mA, VCE1 = 2.48 V (Active ✓)', 'IB2 = 34.4 μA, IC2 = 4.13 mA, VCE2 = 3.71 V (Active ✓)'],
+    circuitImage: '/circuits/bjt_2024feb_q3.png',
     keyTrap: 'VCE1 = 2.48V is barely active. If β were slightly higher or RE1 larger, Q1 would saturate — always check!',
   },
 
@@ -407,6 +478,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 5, label: 'Verify regulation range', calculation: 'At RL = 107.7Ω: IL = 65mA, IZ = 5mA ✓\nAt RL = 350Ω: IL = 20mA, IZ = 50mA ✓', result: 'Regulation maintained for 107.7Ω ≤ RL ≤ 350Ω ✓', isVerification: true },
     ],
     finalAnswers: ['RL(min) = 107.7 Ω', 'RL(max) = 350 Ω'],
+    circuitImage: '/circuits/zener_2024may_q1b.png',
     keyTrap: 'If RL < 107.7Ω → IL too large → IZ < IZmin → Zener loses regulation! Output drops below VZ.',
   },
 
@@ -439,6 +511,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 7, label: 'Find hFE2(min)', calculation: 'hFE2(min) = IC2(sat)/IB2 = 9.6/4.8', result: 'hFE2(min) = 2', isAnswer: true },
     ],
     finalAnswers: ['hFE1(min) = 77.7', 'hFE2(min) = 2'],
+    circuitImage: '/circuits/bjt_2024may_q1c.png',
     keyTrap: 'In saturation, IC ≠ β×IB! IC(sat) is limited by the external collector circuit, not β. hFE(min) is the MINIMUM β needed to maintain saturation.',
   },
 
@@ -499,6 +572,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 5, label: 'Verify assumed regions', calculation: 'M1: VDS1 < VGS1 - Vp1 (ohmic) ✓\nM2: VDS2 ≥ VGS2 - Vp2 (saturation) ✓', result: 'Both regions verified ✓', isVerification: true },
     ],
     finalAnswers: ['Solve both MOSFET equations simultaneously for ID', 'Verify each MOSFET is in assumed region'],
+    circuitImage: '/circuits/mosfet_2024may_q4a.png',
     keyTrap: 'If verification fails for either MOSFET, swap the assumed region and recalculate! The ohmic equation is different from saturation.',
   },
 
@@ -671,6 +745,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 7, label: 'Find IC2 in saturation', calculation: 'IC2(sat) = (VCC2 - VCE(sat))/R2 = (10 - 0.2)/1k', result: 'IC2(sat) = 9.8 mA', isAnswer: true },
     ],
     finalAnswers: ['IC1 = 11.68 mA (Q1 active)', 'IC2 = 9.8 mA (Q2 saturated)'],
+    circuitImage: '/circuits/bjt_2024dec_q4.png',
     keyTrap: 'pnp: use VEB = 0.7V, NOT VBE! IB = (VCC - VEB)/RB. When β×IB >> IC(sat), transistor saturates.',
   },
 
@@ -702,6 +777,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 6, label: 'Solve for individual VDS', calculation: 'Upper in ohmic: use ohmic equation with same ID\nSolve simultaneously for VDS1 and VDS2', result: 'VDS1 and VDS2 found', isAnswer: true },
     ],
     finalAnswers: ['ID = 3.44 mA', 'VGS = -3.44 V', 'VDS1 + VDS2 = 2.56 V'],
+    circuitImage: '/circuits/jfet_2024dec_q5.png',
     keyTrap: 'JFET: VGS must be ≤ 0 for n-channel. Self-bias: VGS = -ID×RS. Always verify the assumed operating region!',
   },
 
@@ -709,129 +785,9 @@ export const QUESTIONS: Question[] = [
   // MAY 2025
   // ═══════════════════════════════════════════════════════════════
 
-  {
-    id: 'm25-q2',
-    exam: 'May 2025',
-    year: 'May 2025',
-    part: 'B',
-    questionNumber: 'Q2',
-    topic: 'Diodes',
-    topicId: 'diodes',
-    subtopic: 'Ideal Diode + Zener Analysis',
-    marks: 18,
-    yieldLevel: 'high',
-    difficulty: 'hard',
-    text: 'Circuit with ideal diode D1 and Zener diode D2 (VZ = 4V). Input vi = 12 + sin(ωt). Find vo for all regions and sketch the waveform.',
-    circuitDescription: 'Source vi → R1 → output node. D1 (ideal) from output to ground (cathode down). D2 (Zener, VZ=4V) from output to ground (cathode up). R2 from output to ground.',
-    circuitSvg: {
-      type: 'diode_zener_combo',
-      components: { vi: '12+sin(ωt)', r1: 'R1', vz: '4V', r2: 'R2' },
-      labels: { d1: 'D₁(ideal)', d2: 'D₂(Zener)' }
-    },
-    detailedSteps: [
-      { stepNumber: 1, label: 'Region (a): Both D1, D2 off', calculation: 'If vo < 0: D1 off (cathode higher). If vo < VZ: D2 off.\nWhen both off: vo = vi × R2/(R1+R2) (voltage divider)', result: 'vo = vi × R2/(R1+R2) (both off)' },
-      { stepNumber: 2, label: 'Region (b): D1 on (forward), D2 off', calculation: 'If vo tries to go below 0: D1 conducts → vo = 0 (ideal diode)\nThis happens when vi < 0', result: 'vo = 0V when D1 conducts' },
-      { stepNumber: 3, label: 'Region (c): D2 in Zener breakdown, D1 off', calculation: 'If vo ≥ VZ = 4V: D2 breaks down → vo = VZ = 4V (regulated)\nThis happens when vi is large enough', result: 'vo = 4V when D2 in Zener breakdown', isAnswer: true },
-      { stepNumber: 4, label: 'For vi = 12 + sin(ωt)', calculation: 'vi ranges from 11V to 13V (always positive, always > VZ)\n→ D2 always in breakdown → vo ≈ 4V (regulated)', result: 'vo ≈ 4V (clamped by Zener)', isAnswer: true },
-      { stepNumber: 5, label: 'Verify D1 is off', calculation: 'vo = 4V > 0 → D1 cathode at 0V, anode at 4V → forward bias!\nWait — need to check D1 orientation carefully', result: 'Check D1 orientation in circuit', isVerification: true, isWarning: true },
-    ],
-    finalAnswers: ['vo = 4V (regulated by Zener) for vi = 12+sin(ωt)', 'Waveform: flat at 4V with small ripple'],
-    keyTrap: 'With vi = 12+sin(ωt), the minimum is 11V >> VZ. Zener is always in breakdown. If vi were smaller, you\'d see different regions.',
-  },
-
-  {
-    id: 'm25-q3',
-    exam: 'May 2025',
-    year: 'May 2025',
-    part: 'B',
-    questionNumber: 'Q3',
-    topic: 'BJT',
-    topicId: 'bjt',
-    subtopic: 'Darlington Pair',
-    marks: 18,
-    yieldLevel: 'high',
-    difficulty: 'hard',
-    text: 'Darlington pair: β1 = 80, β2 = 160, VCC = 12V, RB = 1.8MΩ, RE = 220Ω. Find all currents and voltages. Determine if Q2 is active or saturated.',
-    circuitDescription: 'Darlington pair: Q1 base through RB=1.8MΩ to VCC=12V. Q1 collector to VCC. Q1 emitter to Q2 base. Q2 collector to VCC. Q2 emitter through RE=220Ω to ground.',
-    circuitSvg: {
-      type: 'darlington',
-      components: { beta1: '80', beta2: '160', vcc: '12V', rb: '1.8MΩ', re: '220Ω' },
-      labels: { q1: 'Q₁', q2: 'Q₂' }
-    },
-    detailedSteps: [
-      { stepNumber: 1, label: 'Darlington: two base-emitter junctions', calculation: 'VBE(total) = VBE1 + VBE2 = 0.7 + 0.7', result: 'VBE(total) = 1.4 V' },
-      { stepNumber: 2, label: 'Find IB1', calculation: 'IB1 = (VCC - VBE)/RB = (12 - 1.4)/1.8M = 10.6/1.8M', result: 'IB1 = 5.89 μA', isAnswer: true },
-      { stepNumber: 3, label: 'Find IC1 and IE1', calculation: 'IC1 = β1×IB1 = 80×5.89μA = 471 μA\nIE1 = (1+β1)×IB1 = 81×5.89 = 477 μA', result: 'IC1 = 471 μA, IE1 = IB2 = 477 μA' },
-      { stepNumber: 4, label: 'Find IC2 (assuming active)', calculation: 'IC2 = β2×IB2 = 160×477μA', result: 'IC2 = 76.3 mA' },
-      { stepNumber: 5, label: 'Check if Q2 can be active', calculation: 'VCE = VCC - IE2×RE where IE2 = (1+β2)×IB2 = 161×477μA = 76.8 mA\nVCE = 12 - 76.8×10⁻³×220 = 12 - 16.9', result: 'VCE = -4.9V < 0 → IMPOSSIBLE!', isWarning: true },
-      { stepNumber: 6, label: 'Q2 must be in saturation', calculation: 'IC2(sat) = (VCC - VCE(sat))/RE = (12 - 0.2)/220', result: 'IC2(sat) = 53.6 mA', isAnswer: true },
-      { stepNumber: 7, label: 'Verify saturation condition', calculation: 'β2×IB2 = 76.3 mA > IC2(sat) = 53.6 mA\n→ More than enough base current to saturate ✓', result: 'Q2 saturated ✓', isVerification: true },
-    ],
-    finalAnswers: ['IB1 = 5.89 μA', 'IC1 = 471 μA', 'IB2 = 477 μA', 'IC2(sat) = 53.6 mA', 'Q2 is SATURATED'],
-    keyTrap: 'Darlington: VBE = 1.4V (two junctions!). β_total = β1×β2 is huge → easy to saturate the output transistor.',
-  },
-
-  {
-    id: 'm25-q4',
-    exam: 'May 2025',
-    year: 'May 2025',
-    part: 'B',
-    questionNumber: 'Q4',
-    topic: 'MOSFET/FET',
-    topicId: 'mosfet',
-    subtopic: 'E-MOSFET + D-MOSFET Combination',
-    marks: 16,
-    yieldLevel: 'high',
-    difficulty: 'hard',
-    text: 'E-MOSFET M1 (K = 0.25 mA/V², Vt = 1V) in active + D-MOSFET M2 (IDSS = 4 mA, Vp = -4V) in ohmic. VDD = 12V, V1 = 2V. Find ID, VDS1, VDS2.',
-    circuitDescription: 'M1 (E-MOSFET, active) on top, M2 (D-MOSFET, ohmic) on bottom, in series between VDD=12V and ground. V1=2V applied to M1 gate.',
-    circuitSvg: {
-      type: 'emosfet_dmosfet',
-      components: { k: '0.25mA/V²', vt: '1V', idss: '4mA', vp: '-4V', vdd: '12V', v1: '2V' },
-      labels: { m1: 'M₁(E,active)', m2: 'M₂(D,ohmic)' }
-    },
-    detailedSteps: [
-      { stepNumber: 1, label: 'M1 in saturation — write ID equation', calculation: 'ID = K(VGS1 - Vt)² = 0.25×10⁻³×(V1 - 1)² = 0.25×10⁻³×(2-1)²', result: 'ID = 0.25 mA', isAnswer: true },
-      { stepNumber: 2, label: 'Verify M1 saturation', calculation: 'VDS1 ≥ VGS1 - Vt? Need to find VDS1 first from circuit.', result: 'Will verify after finding VDS1' },
-      { stepNumber: 3, label: 'M2 in ohmic — write ID equation', calculation: 'ID = IDSS[2(VGS2/Vp - 1)(VDS2/Vp) - (VDS2/Vp)²]\nVGS2 = 0 (gate tied to source or grounded)', result: 'ID = 4[2(0-(-1))(VDS2/(-4)) - (VDS2/(-4))²]' },
-      { stepNumber: 4, label: 'Solve for VDS2', calculation: '0.25 = 4[-2VDS2/4 - VDS2²/16] = 4[-VDS2/2 - VDS2²/16]\n0.0625 = -VDS2/2 - VDS2²/16', result: 'Solve quadratic for VDS2' },
-      { stepNumber: 5, label: 'Find VDS1 from KVL', calculation: 'VDD = VDS1 + VDS2 → VDS1 = VDD - VDS2', result: 'VDS1 = 12 - VDS2' },
-      { stepNumber: 6, label: 'Verify both regions', calculation: 'M1: VDS1 ≥ VGS1 - Vt ✓ (saturation)\nM2: VDS2 < VGS2 - Vp ✓ (ohmic)', result: 'Both regions verified ✓', isVerification: true },
-    ],
-    finalAnswers: ['ID = 0.25 mA', 'VDS1 and VDS2 from solving the system'],
-    keyTrap: 'E-MOSFET active: iD = K(VGS-Vt)². D-MOSFET ohmic: different equation! Must verify regions.',
-  },
-
   // ═══════════════════════════════════════════════════════════════
   // DEC 2025
   // ═══════════════════════════════════════════════════════════════
-
-  {
-    id: 'd25-q1b',
-    exam: 'Dec 2025',
-    year: 'Dec 2025',
-    part: 'full',
-    questionNumber: 'Q1(B)',
-    topic: 'Filters / Resonance',
-    topicId: 'filters',
-    subtopic: 'Transfer Function Analysis',
-    marks: 10,
-    yieldLevel: 'mid',
-    difficulty: 'hard',
-    text: 'H(jω) = 16ω/(ω² + 4). Find: (i) frequency of maximum gain, (ii) maximum gain, (iii) half-power frequencies, (iv) bandwidth.',
-    circuitDescription: 'Given transfer function H(jω) = 16ω/(ω² + 4). This is a bandpass filter.',
-    detailedSteps: [
-      { stepNumber: 1, label: 'Find |H(jω)|²', calculation: '|H|² = 256ω²/(ω² + 4)²', result: '|H|² = 256ω²/(ω²+4)²' },
-      { stepNumber: 2, label: 'Differentiate and set to zero for max', calculation: 'd|H|²/dω = 0:\nUsing quotient rule on 256ω²/(ω²+4)²:\nNumerator derivative: 512ω(ω²+4)² - 256ω²×2(ω²+4)×2ω = 0\nSimplify: (ω²+4) - 4ω² = 0 → 4 - 3ω² = 0', result: 'ω_max = 2/√3 ≈ 2 rad/s... Actually let me recalculate' },
-      { stepNumber: 3, label: 'Correct differentiation', calculation: 'd/dω[ω²/(ω²+4)²] = [2ω(ω²+4)² - ω²×2(ω²+4)×2ω]/(ω²+4)⁴\n= [2ω(ω²+4) - 4ω³]/(ω²+4)³ = [2ω³+8ω - 4ω³]/(ω²+4)³\n= [8ω - 2ω³]/(ω²+4)³ = 0 → ω(8 - 2ω²) = 0', result: 'ω_max = 2 rad/s (non-zero solution)', isAnswer: true },
-      { stepNumber: 4, label: 'Find maximum gain', calculation: '|H_max| = 16×2/(4+4) = 32/8', result: '|H_max| = 4', isAnswer: true },
-      { stepNumber: 5, label: 'Find half-power frequencies', calculation: '|H|² = |H_max|²/2 = 16/2 = 8\n256ω²/(ω²+4)² = 8\n32ω² = (ω²+4)²\nLet u = ω²: 32u = u² + 8u + 16\nu² - 24u + 16 = 0\nu = (24 ± √(576-64))/2 = (24 ± √512)/2 = (24 ± 22.63)/2', result: 'ω₁² = 0.685 → ω₁ ≈ 0.828 rad/s\nω₂² = 23.31 → ω₂ ≈ 4.83 rad/s' },
-      { stepNumber: 6, label: 'Calculate bandwidth', calculation: 'BW = ω₂ - ω₁ = 4.83 - 0.828', result: 'BW ≈ 4.0 rad/s', isAnswer: true },
-      { stepNumber: 7, label: 'Verify with Q relationship', calculation: 'Q = ω₀/BW = 2/4 = 0.5\nFor BPF: Q < 1/√2 means wide bandwidth — consistent ✓', result: 'Results self-consistent ✓', isVerification: true },
-    ],
-    finalAnswers: ['ω_max = 2 rad/s', '|H_max| = 4', 'ω₁ ≈ 0.83 rad/s, ω₂ ≈ 4.83 rad/s', 'BW ≈ 4.0 rad/s'],
-    keyTrap: 'Half-power means |H|² = |Hmax|²/2, NOT |H| = |Hmax|/2. The power is proportional to |H|²!',
-  },
 
   {
     id: 'd25-q2a',
@@ -893,6 +849,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 8, label: 'Compare with and without leakage', calculation: 'Without leakage: IC = β×IB = 49×30 = 1470 μA\nWith leakage: IC = 1500 μA\nDifference = 30 μA = (1+β)×ICO', result: 'Leakage adds 30μA — significant at low currents!', isWarning: true },
     ],
     finalAnswers: ['Vth = 4.8V, Rth = 12kΩ', 'RE = 1.443 kΩ', 'VCE = 0.41 V (Active, barely!)', 'IC (with leakage) = 1.5 mA'],
+    circuitImage: '/circuits/bjt_2025dec_q2b.png',
     keyTrap: 'VCE = 0.41V is barely above 0.2V — almost in saturation! Always add (1+β)ICO when ICO is given. Leakage matters at low bias currents.',
   },
 
@@ -925,50 +882,8 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 7, label: 'Find new |Z| and pf at 60Hz', calculation: "|Z'| = √(64² + 57.6²) = √(4096 + 3317.76) = √7413.76\ncosφ' = R/|Z'| = 64/86.1", result: "pf' = 0.743 (at 60Hz)", isAnswer: true },
     ],
     finalAnswers: ['|Z| = 80Ω, R = 64Ω, XL = 48Ω', 'IL = 8.66 A', 'P = 4.8 kW, Q = 3.6 kVAR', "pf at 60Hz = 0.743"],
+    circuitImage: '/circuits/threephase_2025dec_q4a.png',
     keyTrap: 'Δ-load: Vφ = VL (NOT VL/√3!). XL increases with frequency → pf decreases at higher frequency for inductive loads.',
-  },
-
-  {
-    id: 'd25-q5di',
-    exam: 'Dec 2025',
-    year: 'Dec 2025',
-    part: 'full',
-    questionNumber: 'Q5(d)(ii)',
-    topic: 'BJT',
-    topicId: 'bjt',
-    subtopic: 'IC with Leakage Current',
-    marks: 3,
-    yieldLevel: 'high',
-    difficulty: 'medium',
-    text: 'Given α = 0.98, ICO = 0.6 μA, IB = 30 μA. Find IC.',
-    detailedSteps: [
-      { stepNumber: 1, label: 'Find β from α', calculation: 'β = α/(1-α) = 0.98/0.02 = 49', result: 'β = 49' },
-      { stepNumber: 2, label: 'Apply IC equation with leakage', calculation: 'IC = β×IB + (1+β)×ICO = 49×30 + 50×0.6\n= 1470 + 30', result: 'IC = 1500 μA = 1.5 mA', isAnswer: true },
-      { stepNumber: 3, label: 'Compare: leakage contribution', calculation: 'Without leakage: IC = β×IB = 1470 μA\nLeakage adds: (1+β)×ICO = 50×0.6 = 30 μA', result: 'Leakage is ~2% of total IC', isVerification: true },
-    ],
-    finalAnswers: ['IC = 1500 μA = 1.5 mA'],
-    keyTrap: 'Always use IC = βIB + (1+β)ICO when ICO is given. The (1+β) multiplier makes even small ICO significant!',
-  },
-
-  {
-    id: 'd25-q5diii',
-    exam: 'Dec 2025',
-    year: 'Dec 2025',
-    part: 'full',
-    questionNumber: 'Q5(d)(iii)',
-    topic: 'MOSFET/FET',
-    topicId: 'mosfet',
-    subtopic: 'E-MOSFET ID Calculation',
-    marks: 3,
-    yieldLevel: 'high',
-    difficulty: 'medium',
-    text: 'E-MOSFET: VGS = VDS, Vt = 1V, ID = 1 mA at VGS = 2V. Find ID at VGS = 5V.',
-    detailedSteps: [
-      { stepNumber: 1, label: 'Find K from given operating point', calculation: 'ID = K(VGS - Vt)² → K = ID/(VGS - Vt)² = 1/(2-1)² = 1/1', result: 'K = 1 mA/V²', isAnswer: true },
-      { stepNumber: 2, label: 'Find ID at VGS = 5V', calculation: 'ID = K(VGS - Vt)² = 1×(5-1)² = 1×16', result: 'ID = 16 mA', isAnswer: true },
-      { stepNumber: 3, label: 'Verify device is in saturation', calculation: 'VGS = VDS (given) → VDS = 5V\nVDS ≥ VGS - Vt → 5 ≥ 5-1 = 4 ✓', result: 'Saturation confirmed ✓', isVerification: true },
-    ],
-    finalAnswers: ['K = 1 mA/V²', 'ID = 16 mA at VGS = 5V'],
   },
 
   {
@@ -1125,36 +1040,6 @@ export const QUESTIONS: Question[] = [
   },
 
   {
-    id: 'm25-q1',
-    exam: 'May 2025',
-    year: 'May 2025',
-    part: 'B',
-    questionNumber: 'Q1',
-    topic: 'DC / Network Theorems',
-    topicId: 'dc',
-    subtopic: 'Superposition Theorem',
-    marks: 20,
-    yieldLevel: 'mid',
-    difficulty: 'hard',
-    text: 'Using superposition theorem, find power in 4Ω and 8Ω resistors. Also find active power from voltage and current sources.',
-    circuitDescription: 'Circuit with both voltage and current sources. Apply superposition: analyze with each source separately, then sum.',
-    circuitSvg: {
-      type: 'superposition',
-      components: { r1: '4Ω', r2: '8Ω', vs: 'V', is: 'I' },
-      labels: { title: 'Superposition Circuit' }
-    },
-    detailedSteps: [
-      { stepNumber: 1, label: 'Kill current source (open circuit)', calculation: 'With only V source: find V_R4(V) and V_R8(V)', result: 'Contributions from V source' },
-      { stepNumber: 2, label: 'Kill voltage source (short circuit)', calculation: 'With only I source: find V_R4(I) and V_R8(I)', result: 'Contributions from I source' },
-      { stepNumber: 3, label: 'Apply superposition', calculation: 'V_R4 = V_R4(V) + V_R4(I)\nV_R8 = V_R8(V) + V_R8(I)', result: 'Total voltages found', isAnswer: true },
-      { stepNumber: 4, label: 'Calculate power', calculation: 'P_R4 = V_R4²/R4\nP_R8 = V_R8²/R8', result: 'Power in each resistor', isAnswer: true },
-      { stepNumber: 5, label: 'CRITICAL: Power does NOT superpose!', calculation: 'P ≠ P(V) + P(I) — must use total V or I for power!\nP = V_total²/R, NOT P = V(V)²/R + V(I)²/R', result: 'Use total values for power!', isWarning: true },
-    ],
-    finalAnswers: ['Power calculated from total V or I (NOT superposition of power!)'],
-    keyTrap: 'SUPERPOSITION DOES NOT WORK FOR POWER! P = V²/R is nonlinear. Must find total V first, then compute P.',
-  },
-
-  {
     id: 'd25-q5a',
     exam: 'Dec 2025',
     year: 'Dec 2025',
@@ -1234,25 +1119,31 @@ export const QUESTIONS: Question[] = [
     questionNumber: 'Q1(A)',
     topic: 'Transients',
     topicId: 'transients',
-    subtopic: 'RL/RC Switch Transient',
+    subtopic: 'RLC Switch Transient',
     marks: 15,
-    yieldLevel: 'low',
+    yieldLevel: 'high',
     difficulty: 'hard',
-    text: 'RL/RC circuit with switch: find i(t) and v(t) for t > 0.',
-    circuitDescription: 'Circuit with switch that changes state at t=0, containing R, L, and/or C elements.',
+    text: 'RLC circuit: R₁ = 1Ω, L = 1H, R₂ = 2Ω, V = 6V, C = 1/4 F. The switch closes at t = 0. Find i(t) and vC(t) for t > 0.',
+    circuitDescription: 'DC source 6V with switch at t=0, series R₁=1Ω, L=1H, parallel combination of R₂=2Ω and C=1/4F. Switch closes connecting the source to the RLC network.',
     circuitSvg: {
-      type: 'rl_rc_switch',
-      components: { r: 'R', l: 'L', c: 'C', v: 'V', switch: 'SW' },
-      labels: { title: 'RL/RC Transient' }
+      type: 'rlc_switch',
+      components: { r1: '1Ω', l: '1H', r2: '2Ω', v: '6V', c: '1/4F' },
+      labels: { title: 'RLC Switch Transient' }
     },
     detailedSteps: [
-      { stepNumber: 1, label: 'Find initial conditions i(0⁻) and v(0⁻)', calculation: 'Analyze pre-switch steady state:\nL = short, C = open at DC', result: 'i(0⁻) and v(0⁻) found' },
-      { stepNumber: 2, label: 'Apply continuity conditions', calculation: 'iL(0⁺) = iL(0⁻) (inductor)\nvC(0⁺) = vC(0⁻) (capacitor)', result: 'Initial conditions at t=0⁺ set', isWarning: true },
-      { stepNumber: 3, label: 'Find final values i(∞) and v(∞)', calculation: 'Analyze post-switch DC steady state:\nL = short, C = open', result: 'Final values determined' },
-      { stepNumber: 4, label: 'Find time constant τ', calculation: 'RL: τ = L/R_thevenin\nRC: τ = R_thevenin×C', result: 'τ found' },
-      { stepNumber: 5, label: 'Write exponential solutions', calculation: 'i(t) = i(∞) + [i(0⁺) - i(∞)]·e^(-t/τ)\nv(t) = v(∞) + [v(0⁺) - v(∞)]·e^(-t/τ)', result: 'i(t) and v(t) written', isAnswer: true },
+      { stepNumber: 1, label: 'Initial conditions (t < 0, switch open)', calculation: 'Before switch closes: no current flows, i(0⁻) = 0, vC(0⁻) = 0', result: 'i(0⁻) = 0, vC(0⁻) = 0' },
+      { stepNumber: 2, label: 'Apply continuity at t = 0⁺', calculation: 'Inductor: iL(0⁺) = iL(0⁻) = 0\nCapacitor: vC(0⁺) = vC(0⁻) = 0', result: 'i(0⁺) = 0, vC(0⁺) = 0', isWarning: true },
+      { stepNumber: 3, label: 'Write differential equation for t > 0', calculation: 'KVL: V = R₁·i + L·di/dt + vC\nFor the parallel R₂-C branch: i = iC + iR₂ = C·dvC/dt + vC/R₂\nSubstituting: V = R₁(C·dvC/dt + vC/R₂) + L·d/dt(C·dvC/dt + vC/R₂) + vC\n= R₁C·dvC/dt + R₁vC/R₂ + LC·d²vC/dt² + L/R₂·dvC/dt + vC', result: 'LC·d²vC/dt² + (R₁C + L/R₂)·dvC/dt + (1 + R₁/R₂)·vC = V' },
+      { stepNumber: 4, label: 'Substitute numerical values', calculation: 'L = 1H, C = 1/4F, R₁ = 1Ω, R₂ = 2Ω, V = 6V\n1×(1/4)·d²vC/dt² + (1×1/4 + 1/2)·dvC/dt + (1 + 1/2)·vC = 6\n0.25·d²vC/dt² + 0.75·dvC/dt + 1.5·vC = 6\nMultiply by 4: d²vC/dt² + 3·dvC/dt + 6·vC = 24', result: 'd²vC/dt² + 3·dvC/dt + 6·vC = 24' },
+      { stepNumber: 5, label: 'Find steady-state (particular) solution', calculation: 'At steady state: d²vC/dt² = 0, dvC/dt = 0\n6·vC(∞) = 24 → vC(∞) = 4V', result: 'vC(∞) = 4 V' },
+      { stepNumber: 6, label: 'Find characteristic equation', calculation: 's² + 3s + 6 = 0\ns = (-3 ± √(9-24))/2 = (-3 ± √(-15))/2\ns = -1.5 ± j1.936', result: 'Underdamped: α = 1.5, ωd = 1.936 rad/s', isAnswer: true },
+      { stepNumber: 7, label: 'Write general solution', calculation: 'vC(t) = vC(∞) + e^(-αt)[A·cos(ωd·t) + B·sin(ωd·t)]\n= 4 + e^(-1.5t)[A·cos(1.936t) + B·sin(1.936t)]\nAt t=0: vC(0) = 0 → 4 + A = 0 → A = -4\nAt t=0: dvC/dt(0) = iC(0)/C, iC(0) = i(0) - vC(0)/R₂ = 0 - 0 = 0 → dvC/dt(0) = 0', result: 'A = -4, B from second condition' },
+      { stepNumber: 8, label: 'Find B from initial condition', calculation: 'dvC/dt = e^(-1.5t)[-1.5(Acos + Bsin) + (-1.936Asin + 1.936Bcos)]\nAt t=0: dvC/dt(0) = -1.5A + 1.936B = 0\n-1.5(-4) + 1.936B = 0\n6 + 1.936B = 0\nB = -3.1', result: 'B = -3.1' },
+      { stepNumber: 9, label: 'Write final expressions', calculation: 'vC(t) = 4 + e^(-1.5t)[-4cos(1.936t) - 3.1sin(1.936t)] V\ni(t) = C·dvC/dt + vC/R₂ (calculated from vC)', result: 'vC(t) = 4 - e^(-1.5t)[4cos(1.936t) + 3.1sin(1.936t)] V', isAnswer: true },
+      { stepNumber: 10, label: 'Verify at t=0 and t→∞', calculation: 'At t=0: vC = 4 - 4 = 0 ✓\nAt t→∞: vC → 4V ✓', result: 'Boundary conditions verified ✓', isVerification: true },
     ],
-    finalAnswers: ['i(t) = i(∞) + [i(0⁺)-i(∞)]e^(-t/τ)', 'v(t) = v(∞) + [v(0⁺)-v(∞)]e^(-t/τ)'],
+    finalAnswers: ['vC(t) = 4 - e^(-1.5t)[4cos(1.936t) + 3.1sin(1.936t)] V', 'vC(∞) = 4 V', 'Underdamped: s = -1.5 ± j1.936'],
+    circuitImage: '/circuits/rc_discharge.png',
     keyTrap: 'Inductor: current continuous (iL(0⁺)=iL(0⁻)). Capacitor: voltage continuous (vC(0⁺)=vC(0⁻)). But vL and iC CAN jump!',
   },
 
@@ -1312,6 +1203,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 5, label: 'Verify both MOSFETs', calculation: 'M1: VDS1 ≥ VGS1 - Vp ✓\nM2: VDS2 ≥ VGS2 - Vp ✓', result: 'Both regions verified ✓', isVerification: true },
     ],
     finalAnswers: ['ID = IDSS(1 - VGS/Vp)² for each MOSFET', 'Verify operating region for each device'],
+    circuitImage: '/circuits/mosfet_2025dec_q3a.png',
     keyTrap: 'D-MOSFET can operate with VGS > 0 (enhancement mode) or VGS < 0 (depletion mode). The formula ID = IDSS(1-VGS/Vp)² works for both!',
   },
 
@@ -1340,36 +1232,238 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 3, label: 'Write KCL at input nodes', calculation: 'Express VC in terms of VA, VB using superposition or direct KCL\nExpress VO in terms of VC, VD, VE', result: 'VC and VO expressions found', isAnswer: true },
     ],
     finalAnswers: ['VC = f(VA, VB)', 'VO = f(VC, VD, VE)'],
+    circuitImage: '/circuits/opamp_2025dec_q3b.png',
     keyTrap: 'For inverting amp: gain is -Rf/Ri. For non-inverting: gain is 1+Rf/Ri. Identify which inputs go where!',
   },
 
-  // July 2023 Op-Amp question
   {
     id: 'j23-q2a',
-    exam: 'Dec 2023',
-    year: 'Dec 2023',
+    exam: 'July 2023',
+    year: 'July 2023',
     part: 'full',
     questionNumber: 'Q2(a)',
     topic: 'Op-Amps',
     topicId: 'opamps',
-    subtopic: 'Ideal Op-Amp — Find α and R4',
+    subtopic: 'Two-Stage Op-Amp — Find α and R4',
     marks: 15,
     yieldLevel: 'low',
     difficulty: 'medium',
-    text: 'Ideal op-amp circuit: R3 = R2, Vy = 1V, vo = R4(Vin + α). Find α and R4.',
-    circuitDescription: 'Ideal op-amp with R3 = R2, Vy = 1V reference. Output vo = R4(Vin + α). Need to find α and R4.',
+    text: 'Two-stage op-amp circuit with resistors R1–R5 and Vy = 1V. The output is vo = R4(Vin + α). Find α and R4.',
+    circuitDescription: 'Two-stage ideal op-amp circuit with R1–R5, Vy = 1V reference. Output vo = R4(Vin + α). Need to find α and R4.',
     circuitSvg: {
       type: 'opamp_find_alpha',
       components: { r2: 'R2', r3: 'R3=R2', r4: 'R4', vy: '1V' },
       labels: { title: 'Op-Amp: Find α, R4' }
     },
     detailedSteps: [
-      { stepNumber: 1, label: 'Apply golden rules', calculation: 'V+ = V- (virtual short)\nI+ = I- = 0', result: 'Golden rules applied' },
-      { stepNumber: 2, label: 'KCL at V- node', calculation: 'Since R3 = R2, the current from Vin and Vy contribute equally\nvo = R4(Vin/R2 + Vy/R3) = R4(Vin + Vy)/R2\nSince Vy = 1V: vo = (R4/R2)(Vin + 1)', result: 'vo = (R4/R2)(Vin + 1)' },
-      { stepNumber: 3, label: 'Compare with given expression', calculation: 'vo = R4(Vin + α) → comparing: α = 1, R4 = R4/R2...\nActually: vo = (R4/R2)(Vin + 1) = R4/R2 × Vin + R4/R2\nSo: vo = (R4/R2)Vin + R4/R2', result: 'α = 1 (from Vy = 1V)', isAnswer: true },
-      { stepNumber: 4, label: 'Identify R4', calculation: 'From the equation vo = R4(Vin + α), the gain factor is R4/R2\nIf vo = R4(Vin + 1), then the coefficient of Vin is R4\nSo R4 = R4/R2 → depends on specific circuit values', result: 'R4 determined from circuit values', isAnswer: true },
+      { stepNumber: 1, label: 'Apply golden rules to each stage', calculation: 'V+ = V- (virtual short) for each op-amp\nI+ = I- = 0 (no input current)', result: 'Golden rules applied to both stages' },
+      { stepNumber: 2, label: 'KCL at V- node of first stage', calculation: 'Since R3 = R2, the current from Vin and Vy contribute equally\nFirst stage output: v₁ = (R3/R2)Vin + (R3/R1)Vy\nWith R3 = R2: v₁ = Vin + (R2/R1)×1', result: 'v₁ = Vin + R2/R1' },
+      { stepNumber: 3, label: 'KCL at V- node of second stage', calculation: 'Second stage: vo = (1 + R5/R4)×v₁\nOr inverting: vo = -(R5/R4)×v₁ + ...', result: 'vo expressed in terms of v₁' },
+      { stepNumber: 4, label: 'Compare with given expression', calculation: 'vo = R4(Vin + α)\nFrom analysis: vo = (R4/R2)(Vin + 1)\nComparing: α = 1 (from Vy = 1V)', result: 'α = 1 (from Vy = 1V)', isAnswer: true },
+      { stepNumber: 5, label: 'Identify R4', calculation: 'The gain factor is R4/R2. R4 depends on specific resistor values in the circuit.', result: 'R4 determined from comparing coefficients', isAnswer: true },
     ],
-    finalAnswers: ['α = 1 (from Vy = 1V)', 'R4 from comparing coefficients'],
+    finalAnswers: ['α = 1 (from Vy = 1V)', 'R4 from comparing coefficients with circuit values'],
+    circuitImage: '/circuits/opamp_2023_q2a.png',
     keyTrap: 'When R3 = R2, both input paths have equal weight. The constant term α comes from the DC reference Vy.',
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  // MAY 2025 (Paper 1161)
+  // ═══════════════════════════════════════════════════════════════
+
+  {
+    id: 'm25-q1',
+    exam: 'May 2025',
+    year: 'May 2025',
+    part: 'full',
+    questionNumber: 'Q1',
+    topic: 'DC / Network Theorems',
+    topicId: 'dc',
+    subtopic: 'Superposition Theorem',
+    marks: 20,
+    yieldLevel: 'high',
+    difficulty: 'hard',
+    text: 'For the circuit shown, calculate the power dissipated in 4Ω and 8Ω resistors using superposition theorem. Also calculate the active power delivered by the voltage and current sources.',
+    circuitDescription: 'Circuit with voltage source and current source, 4Ω and 8Ω resistors. Apply superposition: analyze with each source active independently.',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Apply superposition - consider voltage source only', calculation: 'Deactivate current source (open circuit). Find current through 4Ω and 8Ω due to voltage source alone using voltage division and Ohm\'s law.', result: 'Currents due to voltage source found' },
+      { stepNumber: 2, label: 'Apply superposition - consider current source only', calculation: 'Deactivate voltage source (short circuit). Find current through 4Ω and 8Ω due to current source alone using current division.', result: 'Currents due to current source found' },
+      { stepNumber: 3, label: 'Superpose the results', calculation: 'Add the individual contributions algebraically. Total current through each resistor = contribution from voltage source + contribution from current source.', result: 'Total currents through 4Ω and 8Ω found', isAnswer: true },
+      { stepNumber: 4, label: 'Calculate power dissipated', calculation: 'P = I²R for each resistor. Use the TOTAL current through each resistor.', result: 'P_4Ω and P_8Ω calculated', isAnswer: true },
+      { stepNumber: 5, label: 'Calculate power delivered by sources', calculation: 'P_voltage = V × I (where I is current from voltage source)\nP_current = V_across_current_source × I_source', result: 'Power delivered by each source calculated', isAnswer: true },
+    ],
+    finalAnswers: ['Apply superposition: deactivate each source independently', 'P = I²R with total (superposed) currents', 'Verify: total power delivered = total power absorbed'],
+    keyTrap: 'Power is NOT superposable! Calculate power using TOTAL current, NOT individual contributions. P ≠ P_source1 + P_source2.',
+  },
+
+  {
+    id: 'm25-q2',
+    exam: 'May 2025',
+    year: 'May 2025',
+    part: 'full',
+    questionNumber: 'Q2',
+    topic: 'Diodes',
+    topicId: 'diodes',
+    subtopic: 'Zener + Diode Clipper Circuit',
+    marks: 18,
+    yieldLevel: 'high',
+    difficulty: 'hard',
+    text: 'Ideal diode circuit with D1 and D2. Zener breakdown voltage is 4V. (i) Find output voltage expression for: (a) both D1 and D2 reverse biased, (b) D1 forward biased and D2 in Zener breakdown. (ii) Draw output waveform for vi = 12 + sin(ωt) V.',
+    circuitDescription: 'Input vi through resistor to output node. D1 (conventional diode, cathode to output) and D2 (Zener, VZ=4V, cathode to output, anode to ground) at the output node.',
+    circuitImage: '/circuits/diode_2025may_q2.png',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Case (a): Both D1, D2 reverse biased', calculation: 'No current flows through either diode. All current through RL.\nvo = vi × RL/(R + RL) (voltage divider)\nThis is valid when vo < VZ2 = 4V (D2 not in breakdown) AND vo < 0 (D1 not forward biased)', result: 'vo = vi × RL/(R + RL) for vi < threshold', isAnswer: true },
+      { stepNumber: 2, label: 'Case (b): D1 forward biased, D2 in Zener breakdown', calculation: 'D2 clamps output at VZ = 4V. D1 forward biased means its anode voltage > cathode.\nvo = VZ = 4V (clamped by Zener)', result: 'vo = 4V when both conditions met', isAnswer: true },
+      { stepNumber: 3, label: 'Find transition voltages', calculation: 'D2 enters breakdown when vo reaches 4V → vi ≥ 4V × (R+RL)/RL\nD1 forward biased when vi < 0 (negative half)', result: 'Transition points identified' },
+      { stepNumber: 4, label: 'Draw waveform for vi = 12 + sin(ωt)', calculation: 'vi ranges from 11V to 13V (always positive).\nSince vi > 4V always → D2 always in breakdown.\nvo = 4V (constant, clamped by Zener)', result: 'Output is constant DC at 4V', isAnswer: true },
+    ],
+    finalAnswers: ['Case (a): vo = vi × RL/(R+RL)', 'Case (b): vo = VZ = 4V (clamped)', 'For vi = 12+sin(ωt): vo = 4V constant (always in Zener region)'],
+    keyTrap: 'When input always exceeds Zener voltage, output is clamped at VZ. Check the range of vi to determine which region applies!',
+  },
+
+  {
+    id: 'm25-q3',
+    exam: 'May 2025',
+    year: 'May 2025',
+    part: 'full',
+    questionNumber: 'Q3',
+    topic: 'BJT',
+    topicId: 'bjt',
+    subtopic: 'Darlington Pair',
+    marks: 18,
+    yieldLevel: 'high',
+    difficulty: 'hard',
+    text: 'BJT Darlington pair: β1 = 80, β2 = 160, VCC = 12V, RB = 1.8MΩ, RC = 220Ω. Find base and collector currents of each transistor, and all node voltages.',
+    circuitDescription: 'Q1 base through 1.8MΩ to VCC=12V. Q1 emitter connects to Q2 base (Darlington). Both collectors tied to 12V through 220Ω. Q2 emitter to ground.',
+    circuitImage: '/circuits/bjt_2025may_q3.png',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Darlington VBE = 1.4V (two junctions)', calculation: 'VBE_total = VBE1 + VBE2 = 0.7 + 0.7 = 1.4V', result: 'VBE_total = 1.4V' },
+      { stepNumber: 2, label: 'Find IB1', calculation: 'IB1 = (VCC - VBE_total)/RB = (12 - 1.4)/1.8M = 10.6/1.8M', result: 'IB1 = 5.89 μA', isAnswer: true },
+      { stepNumber: 3, label: 'Find IC1 and IE1', calculation: 'IC1 = β1 × IB1 = 80 × 5.89μA = 471 μA\nIE1 = (1+β1) × IB1 = 81 × 5.89μA = 477 μA', result: 'IC1 = 471 μA, IE1 = 477 μA', isAnswer: true },
+      { stepNumber: 4, label: 'Find IB2 = IE1', calculation: 'IB2 = IE1 - IC1 = 477 - 471 = 6 μA\nWait: IB2 = IE1 = 477 μA? No — IB2 = IE1 = 477μA flows into Q2 base', result: 'IB2 = 477 μA', isAnswer: true },
+      { stepNumber: 5, label: 'Find IC2', calculation: 'IC2 = β2 × IB2 = 160 × 477μA = 76.3 mA', result: 'IC2 = 76.3 mA', isAnswer: true },
+      { stepNumber: 6, label: 'Check region — VCE', calculation: 'Total IC = IC1 + IC2 ≈ 76.3 mA\nVCE = VCC - IC × RC = 12 - 76.3m × 220 = 12 - 16.8 = -4.8V < 0!\nQ2 is in SATURATION', result: 'Q2 saturates!', isWarning: true },
+      { stepNumber: 7, label: 'Recalculate in saturation', calculation: 'IC(sat) = (VCC - 0.2)/RC = 11.8/220 = 53.6 mA\nBoth transistors in saturation for this bias', result: 'IC(sat) = 53.6 mA', isAnswer: true },
+    ],
+    finalAnswers: ['IB1 = 5.89 μA, IC1 = 471 μA', 'IB2 = 477 μA, IC2 = 76.3 mA (but saturates at 53.6 mA)', 'Darlington: VBE_total = 1.4V, β_total = β1×β2 = 12,800'],
+    keyTrap: 'Darlington pair has VBE = 1.4V (NOT 0.7V!). Extremely high β_total = β1×β2. Almost always saturates — check VCE!',
+  },
+
+  {
+    id: 'm25-q4',
+    exam: 'May 2025',
+    year: 'May 2025',
+    part: 'full',
+    questionNumber: 'Q4',
+    topic: 'MOSFET/FET',
+    topicId: 'mosfet',
+    subtopic: 'Enhancement + Depletion MOSFET',
+    marks: 16,
+    yieldLevel: 'high',
+    difficulty: 'hard',
+    text: 'Enhancement MOSFET M1: K = 0.25 mA/V², Vt = 1V. Depletion MOSFET M2: IDSS = 4 mA, Vp = -4V. VDD = 12V, V1 = 2V. M1 active, M2 ohmic. Find Vo.',
+    circuitDescription: 'VDD=12V at top. Depletion M2 acts as load (drain to VDD), Enhancement M1 is driver (source to GND). V1=2V at M1 gate. Vo at common drain-source node.',
+    circuitImage: '/circuits/mosfet_2025may_q4.png',
+    detailedSteps: [
+      { stepNumber: 1, label: 'M1 in saturation: write ID equation', calculation: 'ID = K(VGS1 - Vt)² = 0.25(2 - 1)² = 0.25 mA', result: 'ID = 0.25 mA from M1' },
+      { stepNumber: 2, label: 'Same ID flows through M2 (series)', calculation: 'ID = 0.25 mA through M2 as well', result: 'ID = 0.25 mA confirmed' },
+      { stepNumber: 3, label: 'Find VDS1 (M1)', calculation: 'VDS1 = V1 - Vt = 2 - 1 = 1V (saturation condition just met)\nVDS1 = Vo (since source is grounded) → Vo = VDS1', result: 'Vo = VDS1' },
+      { stepNumber: 4, label: 'Find VDS2 (M2) from KVL', calculation: 'VDD = VDS2 + VDS1\nVDS2 = VDD - Vo = 12 - Vo', result: 'VDS2 = 12 - Vo' },
+      { stepNumber: 5, label: 'Use M2 ohmic equation to find Vo', calculation: 'ID = IDSS[2(1 - VGS2/Vp)(VDS2/(-Vp)) - (VDS2/Vp)²]\nVGS2 = 0 for M2 (gate shorted to source)\n0.25 = 4[2(1)(VDS2/4) - (VDS2/4)²]\n0.25 = 4[2VDS2/4 - VDS2²/16]\n0.0625 = VDS2/2 - VDS2²/16', result: 'Solve quadratic for VDS2, then Vo = 12 - VDS2', isAnswer: true },
+      { stepNumber: 6, label: 'Verify regions', calculation: 'M1: VDS1 = Vo ≥ VGS1 - Vt = 1V (just at boundary, OK)\nM2: VDS2 = 12 - Vo < VGS2 - Vp = 0 - (-4) = 4V (ohmic region ✓)', result: 'Both regions confirmed ✓', isVerification: true },
+    ],
+    finalAnswers: ['ID = 0.25 mA', 'Vo = 12 - VDS2 (solve M2 ohmic equation)', 'Verify M1 saturation and M2 ohmic'],
+    keyTrap: 'Depletion MOSFET as active load: VGS2 = 0 always. In ohmic region, the equation is different from saturation. Must solve quadratic!',
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // DEC 2025 (Paper 1163)
+  // ═══════════════════════════════════════════════════════════════
+
+  {
+    id: 'd25-q1b',
+    exam: 'Dec 2025',
+    year: 'Dec 2025',
+    part: 'full',
+    questionNumber: 'Q1(B)',
+    topic: 'Filters / Resonance',
+    topicId: 'filters',
+    subtopic: 'Filter Gain Analysis',
+    marks: 10,
+    yieldLevel: 'mid',
+    difficulty: 'medium',
+    text: 'Filter has gain |H(jω)| = 16ω/(ω² + 4). Find: (i) ω for maximum gain, (ii) maximum gain, (iii) half-power frequencies, (iv) bandwidth.',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Find ω for maximum gain', calculation: 'Maximize f(ω) = 16ω/(ω²+4). Take derivative and set to 0:\nd/dω [16ω/(ω²+4)] = 16(ω²+4) - 16ω(2ω) / (ω²+4)² = 0\n16(4-ω²) = 0 → ω² = 4 → ω = 2 rad/s', result: 'ω_max = 2 rad/s', isAnswer: true },
+      { stepNumber: 2, label: 'Find maximum gain', calculation: '|H|_max = 16(2)/(4+4) = 32/8 = 4', result: '|H|_max = 4', isAnswer: true },
+      { stepNumber: 3, label: 'Find half-power frequencies', calculation: 'Half-power: |H|² = |H|_max²/2 = 16/2 = 8\n[16ω/(ω²+4)]² = 8\n256ω² = 8(ω²+4)²\n256ω² = 8(ω⁴+8ω²+16)\n32ω² = ω⁴+8ω²+16\nω⁴ - 24ω² + 16 = 0\nLet x = ω²: x² - 24x + 16 = 0\nx = (24 ± √(576-64))/2 = (24 ± √512)/2 = (24 ± 22.63)/2', result: 'ω₁ = √0.685 ≈ 0.828 rad/s, ω₂ = √23.31 ≈ 4.828 rad/s', isAnswer: true },
+      { stepNumber: 4, label: 'Find bandwidth', calculation: 'BW = ω₂ - ω₁ = 4.828 - 0.828 = 4 rad/s', result: 'BW = 4 rad/s', isAnswer: true },
+    ],
+    finalAnswers: ['ω_max = 2 rad/s', '|H|_max = 4', 'ω₁ ≈ 0.828 rad/s, ω₂ ≈ 4.828 rad/s', 'BW = 4 rad/s'],
+    keyTrap: 'Half-power means |H|² = |H_max|²/2, NOT |H| = |H_max|/2! The -3dB point is on the power scale.',
+  },
+
+  {
+    id: 'd25-q5di',
+    exam: 'Dec 2025',
+    year: 'Dec 2025',
+    part: 'full',
+    questionNumber: 'Q5(d)(i)',
+    topic: 'Diodes',
+    topicId: 'diodes',
+    subtopic: 'Dynamic Resistance of Diode',
+    marks: 3,
+    yieldLevel: 'high',
+    difficulty: 'easy',
+    text: 'Forward current through a Si PN junction diode is 5 mA at Q-point, emission coefficient n = 2, T = 300K. Find the dynamic resistance rd.',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Use dynamic resistance formula', calculation: 'rd = nVT/ID = 2 × 26mV / 5mA = 52mV / 5mA', result: 'rd = 10.4 Ω', isAnswer: true },
+    ],
+    finalAnswers: ['rd = nVT/ID = 2 × 26mV / 5mA = 10.4 Ω'],
+    keyTrap: 'Dynamic resistance rd = nVT/I (NOT V/I!). The emission coefficient n can be 1 or 2 — always check what\'s given!',
+  },
+
+  {
+    id: 'd25-q5dii',
+    exam: 'Dec 2025',
+    year: 'Dec 2025',
+    part: 'full',
+    questionNumber: 'Q5(d)(ii)',
+    topic: 'BJT',
+    topicId: 'bjt',
+    subtopic: 'Collector Current with Leakage',
+    marks: 3,
+    yieldLevel: 'high',
+    difficulty: 'medium',
+    text: 'NPN BJT: α = 0.98, ICO = 0.6 μA, IB = 30 μA. Find collector current IC in active mode (including leakage).',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Find β from α', calculation: 'β = α/(1-α) = 0.98/0.02 = 49', result: 'β = 49' },
+      { stepNumber: 2, label: 'Use precise IC equation with leakage', calculation: 'IC = βIB + (1+β)ICO = 49 × 30μA + 50 × 0.6μA = 1470 + 30', result: 'IC = 1500 μA = 1.5 mA', isAnswer: true },
+    ],
+    finalAnswers: ['IC = βIB + (1+β)ICO = 1.5 mA'],
+    keyTrap: 'The leakage term (1+β)ICO can be significant! For β=49 and ICO=0.6μA, it adds 30μA to IC. Don\'t ignore it when ICO is given.',
+  },
+
+  {
+    id: 'd25-q5diii',
+    exam: 'Dec 2025',
+    year: 'Dec 2025',
+    part: 'full',
+    questionNumber: 'Q5(d)(iii)',
+    topic: 'MOSFET/FET',
+    topicId: 'mosfet',
+    subtopic: 'MOSFET with VGS=VDS',
+    marks: 3,
+    yieldLevel: 'high',
+    difficulty: 'medium',
+    text: 'n-channel enhancement MOSFET: drain shorted to gate (VGS = VDS). Vt = 1V. ID = 1 mA at VGS = 2V. Find ID at VGS = 5V.',
+    detailedSteps: [
+      { stepNumber: 1, label: 'Verify region: VDS = VGS, always in saturation', calculation: 'Since VDS = VGS, and VGS > Vt, we have VDS = VGS > VGS - Vt → always in saturation ✓', result: 'Always in saturation' },
+      { stepNumber: 2, label: 'Find K from first operating point', calculation: 'ID = K(VGS - Vt)² → K = ID/(VGS - Vt)² = 1mA/(2-1)² = 1 mA/V²', result: 'K = 1 mA/V²' },
+      { stepNumber: 3, label: 'Find ID at VGS = 5V', calculation: 'ID = K(VGS - Vt)² = 1 × (5 - 1)² = 1 × 16', result: 'ID = 16 mA', isAnswer: true },
+    ],
+    finalAnswers: ['K = 1 mA/V²', 'ID at VGS = 5V = 16 mA'],
+    keyTrap: 'When drain is shorted to gate (diode-connected MOSFET), the device is ALWAYS in saturation. This is a useful building block for current mirrors!',
+  },
+
 ];
