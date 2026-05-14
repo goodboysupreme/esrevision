@@ -2,7 +2,7 @@
 
 import { FC, useState, useMemo } from 'react';
 import { TOPICS, YIELD_COLORS } from '@/data/topics';
-import { QUESTIONS, type Question, type YieldLevel, type Difficulty } from '@/data/questions';
+import { QUESTIONS, type Question, type YieldLevel, type Difficulty, type SolutionStep } from '@/data/questions';
 import TopicChart from './TopicChart';
 
 interface PyqVaultProps {
@@ -43,6 +43,10 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
     return TOPICS.find(t => t.id === topicId)?.color || '#8B867D';
   };
 
+  const getTopicBgColor = (topicId: string) => {
+    return TOPICS.find(t => t.id === topicId)?.bgColor || '#F8FAFC';
+  };
+
   const getYieldBadge = (level: YieldLevel) => {
     const colors: Record<YieldLevel, string> = YIELD_COLORS;
     const labels: Record<YieldLevel, string> = { high: 'High', mid: 'Mid', low: 'Low' };
@@ -72,6 +76,11 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
     );
   };
 
+  const isExcluded = (topicId: string) => {
+    const topic = TOPICS.find(t => t.id === topicId);
+    return topic?.category === 'excluded';
+  };
+
   return (
     <div className="space-y-6">
       {/* Chart Section */}
@@ -80,7 +89,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
           📊 Topic-wise Marks Distribution
         </h2>
         <p className="font-ui text-sm text-muted-text mb-4">
-          Interactive chart: hover for exact marks per topic per year
+          Interactive chart: hover for exact marks per topic per year. Excluded topics shown in grey.
         </p>
         <TopicChart showExcluded={false} height={380} />
       </div>
@@ -194,66 +203,130 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
               No questions match your filters. Try adjusting them.
             </div>
           )}
-          {paginatedQuestions.map((q) => (
-            <div
-              key={q.id}
-              className="bg-cream border border-border-warm rounded-lg overflow-hidden hover:shadow-md transition-shadow"
-            >
-              {/* Question Header */}
-              <button
-                className="w-full text-left p-4 flex gap-3"
-                onClick={() => setExpandedId(expandedId === q.id ? null : q.id)}
+          {paginatedQuestions.map((q) => {
+            const excluded = isExcluded(q.topicId);
+            return (
+              <div
+                key={q.id}
+                className={`bg-cream border border-border-warm rounded-lg overflow-hidden hover:shadow-md transition-shadow ${excluded ? 'opacity-50' : ''}`}
               >
-                <div
-                  className="w-1 shrink-0 rounded-full"
-                  style={{ backgroundColor: getTopicColor(q.topicId) }}
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <span className="font-ui text-[10px] font-semibold text-muted-text">
-                      {q.exam} · {q.questionNumber}
-                    </span>
-                    <span
-                      className="font-ui text-[10px] font-semibold px-2 py-0.5 rounded-full text-cream"
-                      style={{ backgroundColor: getTopicColor(q.topicId) }}
-                    >
-                      {q.subtopic}
-                    </span>
-                    {getYieldBadge(q.yieldLevel)}
-                    {getDifficultyBadge(q.difficulty)}
-                    <span className="font-ui text-[10px] font-bold text-navy ml-auto">
-                      {q.marks} marks
-                    </span>
-                  </div>
-                  <p className="font-body text-sm text-navy leading-relaxed">
-                    {q.text}
-                  </p>
-                </div>
-                <div className="shrink-0 self-center text-muted-text">
-                  <svg
-                    className={`w-4 h-4 transition-transform ${expandedId === q.id ? 'rotate-180' : ''}`}
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </button>
-
-              {/* Expanded Solution */}
-              {expandedId === q.id && q.solution && (
-                <div className="px-4 pb-4 pl-8">
-                  <div className="bg-parchment border border-border-warm rounded-lg p-4">
-                    <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
-                      Solution Method
+                {/* Question Header */}
+                <button
+                  className="w-full text-left p-4 flex gap-3"
+                  onClick={() => setExpandedId(expandedId === q.id ? null : q.id)}
+                >
+                  <div
+                    className="w-1.5 shrink-0 rounded-full"
+                    style={{ backgroundColor: getTopicColor(q.topicId) }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="font-ui text-[10px] font-semibold text-muted-text">
+                        {q.exam} · {q.questionNumber}
+                      </span>
+                      <span
+                        className="font-ui text-[10px] font-semibold px-2 py-0.5 rounded-full text-cream"
+                        style={{ backgroundColor: getTopicColor(q.topicId) }}
+                      >
+                        {q.subtopic}
+                      </span>
+                      {getYieldBadge(q.yieldLevel)}
+                      {getDifficultyBadge(q.difficulty)}
+                      {excluded && (
+                        <span className="font-ui text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-400 text-white">
+                          EXCLUDED
+                        </span>
+                      )}
+                      <span className="font-ui text-[10px] font-bold text-navy ml-auto">
+                        {q.marks} marks
+                      </span>
                     </div>
-                    <p className="font-body text-sm text-navy leading-relaxed whitespace-pre-line">
-                      {q.solution}
+                    <p className="font-body text-sm text-navy leading-relaxed">
+                      {q.text}
                     </p>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                  <div className="shrink-0 self-center text-muted-text">
+                    <svg
+                      className={`w-4 h-4 transition-transform ${expandedId === q.id ? 'rotate-180' : ''}`}
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
+
+                {/* Expanded Solution */}
+                {expandedId === q.id && (
+                  <div className="px-4 pb-4 pl-6">
+                    {/* Excluded warning */}
+                    {excluded && (
+                      <div className="mb-3 p-3 bg-gray-100 border-2 border-gray-300 rounded-lg font-ui text-sm text-gray-600 font-semibold">
+                        🚫 This topic is EXCLUDED from the upcoming exam (Magnetic Circuits & Transformers). Skip this question.
+                      </div>
+                    )}
+
+                    {/* Circuit Description */}
+                    {q.circuitDescription && (
+                      <div className="mb-3 p-3 rounded-lg border" style={{ backgroundColor: getTopicBgColor(q.topicId), borderColor: getTopicColor(q.topicId) + '40' }}>
+                        <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: getTopicColor(q.topicId) }}>
+                          🔌 Circuit Description
+                        </div>
+                        <p className="font-body text-sm text-navy leading-relaxed">{q.circuitDescription}</p>
+                      </div>
+                    )}
+
+                    {/* Key Trap Warning */}
+                    {q.keyTrap && (
+                      <div className="mb-3 p-3 bg-red-50 border-2 border-red-200 rounded-lg">
+                        <div className="font-ui text-[10px] font-bold text-red-700 uppercase tracking-wider mb-1">
+                          🚨 Common Trap
+                        </div>
+                        <p className="font-ui text-sm text-red-800">{q.keyTrap}</p>
+                      </div>
+                    )}
+
+                    {/* Step-by-step solution */}
+                    {q.detailedSteps && q.detailedSteps.length > 0 ? (
+                      <div className="space-y-2">
+                        <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
+                          📝 Step-by-Step Solution
+                        </div>
+                        {q.detailedSteps.map((step: SolutionStep) => (
+                          <StepCard key={step.stepNumber} step={step} topicColor={getTopicColor(q.topicId)} />
+                        ))}
+                      </div>
+                    ) : q.solution ? (
+                      <div className="bg-parchment border border-border-warm rounded-lg p-4">
+                        <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">
+                          Solution Method
+                        </div>
+                        <p className="font-body text-sm text-navy leading-relaxed whitespace-pre-line">
+                          {q.solution}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    {/* Final Answers */}
+                    {q.finalAnswers && q.finalAnswers.length > 0 && (
+                      <div className="mt-3 p-3 bg-emerald-50 border-2 border-emerald-300 rounded-lg">
+                        <div className="font-ui text-[10px] font-bold text-emerald-700 uppercase tracking-wider mb-1.5">
+                          ✅ Final Answers
+                        </div>
+                        <div className="space-y-1">
+                          {q.finalAnswers.map((ans, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <span className="font-ui text-xs text-emerald-500 mt-0.5">▸</span>
+                              <code className="font-mono text-sm text-emerald-900 font-semibold">{ans}</code>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
           {/* Pagination */}
           {totalPages > 1 && (
@@ -277,6 +350,69 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
               </button>
             </div>
           )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface StepCardProps {
+  step: SolutionStep;
+  topicColor: string;
+}
+
+const StepCard: FC<StepCardProps> = ({ step, topicColor }) => {
+  const getStepStyle = () => {
+    if (step.isVerification) return { bg: '#f0fdf4', border: '#86efac', badge: '✓', badgeBg: '#059669', label: 'Verify' };
+    if (step.isAnswer) return { bg: '#ecfdf5', border: '#6ee7b7', badge: '★', badgeBg: '#059669', label: 'Answer' };
+    if (step.isWarning) return { bg: '#fef2f2', border: '#fca5a5', badge: '⚠', badgeBg: '#dc2626', label: 'Watch' };
+    return { bg: '#fafaf9', border: '#e7e5e4', badge: String(step.stepNumber), badgeBg: topicColor, label: `Step ${step.stepNumber}` };
+  };
+
+  const style = getStepStyle();
+
+  return (
+    <div className="flex gap-3">
+      {/* Step number badge */}
+      <div className="flex flex-col items-center shrink-0">
+        <div
+          className="w-7 h-7 rounded-full flex items-center justify-center font-ui text-[11px] font-bold text-white"
+          style={{ backgroundColor: style.badgeBg }}
+        >
+          {style.badge}
+        </div>
+      </div>
+
+      {/* Step content */}
+      <div
+        className="flex-1 rounded-lg p-3 border-l-[3px]"
+        style={{ backgroundColor: style.bg, borderLeftColor: style.badgeBg }}
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <span className="font-ui text-xs font-semibold text-navy">{step.label}</span>
+          {step.isVerification && (
+            <span className="font-ui text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+              VERIFY
+            </span>
+          )}
+          {step.isWarning && (
+            <span className="font-ui text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-700">
+              TRAP
+            </span>
+          )}
+          {step.isAnswer && (
+            <span className="font-ui text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-200 text-emerald-800">
+              ANSWER
+            </span>
+          )}
+        </div>
+        {step.calculation && (
+          <div className="font-mono text-xs text-muted-text leading-relaxed mb-1 whitespace-pre-line">
+            {step.calculation}
+          </div>
+        )}
+        <div className={`font-mono text-sm leading-relaxed ${step.isAnswer ? 'font-bold text-emerald-800' : step.isWarning ? 'text-red-800' : 'text-navy'}`}>
+          {step.result}
         </div>
       </div>
     </div>
