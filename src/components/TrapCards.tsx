@@ -96,12 +96,12 @@ const TrapCards: FC = () => {
             <div
               key={trap.id}
               className="flip-card cursor-pointer"
-              style={{ minHeight: '220px' }}
+              style={{ minHeight: '220px', perspective: '1000px' }}
               onClick={() => toggleFlip(trap.id)}
             >
               <div
-                className={`flip-card-inner relative w-full ${isFlipped ? 'transform [transform:rotateY(180deg)]' : ''}`}
-                style={{ minHeight: '220px', transition: 'transform 0.6s', transformStyle: 'preserve-3d' }}
+                className="flip-card-inner relative w-full"
+                style={{ minHeight: '220px', transition: 'transform 0.6s', transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
               >
                 {/* Front */}
                 <div
