@@ -88,7 +88,7 @@ export const QUESTIONS: Question[] = [
     difficulty: 'hard',
     text: 'A consumer requires 88 kW at pf = 0.707 lagging from a 480 V rms, 50 Hz source. The line resistance is 0.12 Ω. Find the power supplied by the source (i) at present pf, (ii) after PF correction to 0.90 lagging.',
     circuitDescription: 'AC source 480V rms → Line resistance 0.12Ω → Load (88kW at pf=0.707 lag). Capacitor added in parallel for PF correction to 0.90.',
-    circuitImage: '/circuits/pf_correction.png',
+    circuitSvg: { type: 'pf_correction', components: { source: '480V', rline: '0.12Ω', pf1: '88kW 0.707lag' } },
     detailedSteps: [
       { stepNumber: 1, label: 'Find line current before correction', calculation: 'I₁ = P/(V·cosφ₁) = 88000/(480×0.707)', result: 'I₁ = 259.4 A', isAnswer: true },
       { stepNumber: 2, label: 'Line loss before correction', calculation: 'P_line = I₁²·R_line = (259.4)²×0.12 = 67,289×0.12', result: 'P_line_before = 8,078 W = 8.08 kW' },
@@ -200,7 +200,7 @@ export const QUESTIONS: Question[] = [
     difficulty: 'medium',
     text: 'Two parallel loads: Load 1 = 300 kW at 0.6 pf (lagging), Load 2 = 400 kW at 0.8 pf (leading). Find total P, Q, and overall pf.',
     circuitDescription: 'Two loads in parallel across same bus. Load 1 inductive (lagging), Load 2 capacitive (leading).',
-    circuitImage: '/circuits/parallel_loads.png',
+    circuitSvg: { type: 'parallel_loads', components: { p1: '300kW', pf1: 'pf=0.6 lag', p2: '400kW', pf2: 'pf=0.8 lead' } },
     detailedSteps: [
       { stepNumber: 1, label: 'Total active power', calculation: 'P_total = P1 + P2 = 300 + 400', result: 'P_total = 700 kW', isAnswer: true },
       { stepNumber: 2, label: 'Reactive power of Load 1 (lagging = positive Q)', calculation: 'Q1 = P1×tan(cos⁻¹0.6) = 300×tan(53.13°) = 300×1.333', result: 'Q1 = +400 kVAR (inductive)' },
@@ -621,7 +621,7 @@ export const QUESTIONS: Question[] = [
     difficulty: 'hard',
     text: 'Load: P = 200 kW, pf = 0.707 lagging, V = 2000√2 cos(314t) V. Find R, L, and capacitance C to correct pf to 0.85 lagging.',
     circuitDescription: 'AC source V = 2000√2 cos(314t) → R-L load (P=200kW, pf=0.707 lag). Capacitor added in parallel to correct pf to 0.85.',
-    circuitImage: '/circuits/pf_correction_rl.png',
+    circuitSvg: { type: 'pf_correction_rl', components: { source: '2000√2', rline: 'R+jXL', pf1: '200kW 0.707lag' } },
     detailedSteps: [
       { stepNumber: 1, label: 'Find apparent power and current', calculation: '|S| = P/cosφ = 200/0.707 = 282.8 kVA\n|I| = |S|/V = 282800/2000 = 141.4 A', result: '|I| = 141.4 A' },
       { stepNumber: 2, label: 'Find load impedance components', calculation: '|Z| = V/I = 2000/141.4 = 14.14 Ω\nR = |Z|×cosφ = 14.14×0.707 = 10 Ω\nXL = |Z|×sinφ = 14.14×0.707 = 10 Ω', result: 'R = 10 Ω, XL = 10 Ω', isAnswer: true },

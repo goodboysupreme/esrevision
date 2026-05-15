@@ -1011,22 +1011,22 @@ function ParallelLoads({ components, labels }: CompProps) {
       <line x1={40} y1={28} x2={240} y2={28} stroke={C} strokeWidth={2} />
 
       {/* Load 1 */}
-      <W x1={90} y1={28} x2={90} y2={45} />
-      <rect x={65} y={45} width={50} height={35} fill="none" stroke={C} strokeWidth={1.2} rx={3} />
-      <Lbl x={90} y={60} text={p1} anchor="middle" size={7} />
-      <Lbl x={90} y={72} text={pf1} anchor="middle" size={6} />
-      <W x1={90} y1={80} x2={90} y2={120} />
+      <W x1={80} y1={28} x2={80} y2={42} />
+      <rect x={48} y={42} width={64} height={40} fill="none" stroke={C} strokeWidth={1.2} rx={3} />
+      <Lbl x={80} y={58} text={p1} anchor="middle" size={7} />
+      <Lbl x={80} y={72} text={pf1} anchor="middle" size={6} />
+      <W x1={80} y1={82} x2={80} y2={120} />
 
       {/* Load 2 */}
-      <W x1={200} y1={28} x2={200} y2={45} />
-      <rect x={175} y={45} width={50} height={35} fill="none" stroke={C} strokeWidth={1.2} rx={3} />
-      <Lbl x={200} y={60} text={p2} anchor="middle" size={7} />
+      <W x1={200} y1={28} x2={200} y2={42} />
+      <rect x={168} y={42} width={64} height={40} fill="none" stroke={C} strokeWidth={1.2} rx={3} />
+      <Lbl x={200} y={58} text={p2} anchor="middle" size={7} />
       <Lbl x={200} y={72} text={pf2} anchor="middle" size={6} />
-      <W x1={200} y1={80} x2={200} y2={120} />
+      <W x1={200} y1={82} x2={200} y2={120} />
 
       {/* Return bus */}
-      <line x1={40} y1={120} x2={240} y2={120} stroke={C} strokeWidth={2} />
-      <Gnd x={145} y={130} />
+      <line x1={30} y1={120} x2={250} y2={120} stroke={C} strokeWidth={2} />
+      <Gnd x={140} y={130} />
     </g>
   );
 }

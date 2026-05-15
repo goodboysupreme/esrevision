@@ -4,6 +4,7 @@ import { FC, useState, useMemo } from 'react';
 import { TOPICS, YIELD_COLORS } from '@/data/topics';
 import { QUESTIONS, type Question, type YieldLevel, type Difficulty, type SolutionStep } from '@/data/questions';
 import TopicChart from './TopicChart';
+import CircuitDiagram from './CircuitDiagram';
 
 interface PyqVaultProps {
   onNavigate: (tabId: string) => void;
@@ -283,7 +284,13 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                     <div className="flex flex-col lg:flex-row gap-5">
                       {/* LEFT: Circuit Diagram Panel */}
                       <div className="lg:w-[45%] shrink-0">
-                        {q.circuitImage ? (
+                        {q.circuitSvg ? (
+                          <CircuitDiagram
+                            circuit={q.circuitSvg}
+                            topicColor={topicColor}
+                            topicBgColor={topicBgColor}
+                          />
+                        ) : q.circuitImage ? (
                           <div
                             className="rounded-lg p-3 border h-full"
                             style={{ backgroundColor: topicBgColor, borderColor: topicColor + '40' }}
