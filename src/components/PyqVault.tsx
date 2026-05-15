@@ -279,10 +279,10 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                       </div>
                     )}
 
-                    {/* Two-column layout: Circuit Left (40%) + Steps Right (56%) */}
-                    <div className="flex flex-col md:flex-row gap-4">
+                    {/* Two-column layout: Circuit Left + Steps Right */}
+                    <div className="flex flex-col lg:flex-row gap-5">
                       {/* LEFT: Circuit Diagram Panel */}
-                      <div className="md:w-[40%] shrink-0">
+                      <div className="lg:w-[45%] shrink-0">
                         {q.circuitImage ? (
                           <div
                             className="rounded-lg p-3 border h-full"
@@ -295,7 +295,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                               src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}${q.circuitImage}`}
                               alt={`Circuit diagram for ${q.questionNumber}`}
                               className="w-full h-auto rounded bg-white"
-                              style={{ maxHeight: '350px', objectFit: 'contain' }}
+                              style={{ maxHeight: '480px', objectFit: 'contain', padding: '8px' }}
                             />
                           </div>
                         ) : q.circuitDescription ? (
@@ -333,8 +333,8 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                         )}
                       </div>
 
-                      {/* RIGHT: Step-by-Step Solution (56%) */}
-                      <div className="md:w-[56%] min-w-0">
+                      {/* RIGHT: Step-by-Step Solution */}
+                      <div className="lg:w-[52%] min-w-0">
                         {q.detailedSteps && q.detailedSteps.length > 0 ? (
                           <div className="space-y-2">
                             <div className="font-ui text-[10px] font-bold text-muted-text uppercase tracking-wider mb-2">

@@ -68,14 +68,14 @@ const CircuitDiagram: FC<CircuitDiagramProps> = ({ circuit, topicColor, topicBgC
 
   return (
     <div
-      className="rounded-lg p-3 border h-full flex flex-col items-center justify-center"
+      className="rounded-lg p-4 border h-full flex flex-col items-center justify-center"
       style={{ backgroundColor: topicBgColor, borderColor: topicColor + '40' }}
     >
-      <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-2 text-center" style={{ color: topicColor }}>
+      <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-3 text-center" style={{ color: topicColor }}>
         Circuit Diagram
       </div>
       <div className="flex-1 flex items-center justify-center w-full overflow-hidden">
-        <svg viewBox="0 0 300 220" className="w-full max-w-[300px]" style={{ maxHeight: '240px' }}>
+        <svg viewBox="0 0 300 220" className="w-full" style={{ maxHeight: '340px', minHeight: '200px' }}>
           {renderCircuit()}
         </svg>
       </div>

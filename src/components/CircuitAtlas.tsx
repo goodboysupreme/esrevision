@@ -3,6 +3,7 @@
 import { FC, useState } from 'react';
 import { CIRCUITS, type CircuitTopology } from '@/data/circuits';
 import { TOPICS } from '@/data/topics';
+import { CIRCUIT_SVGS } from '@/data/circuitSvgs';
 
 const CircuitAtlas: FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<string>('all');
@@ -75,7 +76,19 @@ const CircuitAtlas: FC = () => {
               style={{ borderLeftColor: topic?.color || '#8B867D' }}
               onClick={() => setExpandedCard(isExpanded ? null : circuit.id)}
             >
-              <div className="p-4">
+              {/* SVG Thumbnail */}
+              {CIRCUIT_SVGS[circuit.id] && (
+                <div
+                  className="px-4 pt-4 pb-2"
+                  style={{ backgroundColor: (topic?.bgColor || '#f8fafc') }}
+                >
+                  <div className="rounded-md overflow-hidden" style={{ background: topic?.bgColor || '#f8fafc' }}>
+                    {CIRCUIT_SVGS[circuit.id]}
+                  </div>
+                </div>
+              )}
+
+            <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span
                     className="font-ui text-[10px] font-bold px-2 py-0.5 rounded text-cream"
