@@ -251,7 +251,7 @@ export const QUESTIONS: Question[] = [
     difficulty: 'medium',
     text: 'Parallel RLC circuit: R = 100Ω, C = 10μF, f₀ = 1200 Hz. Find the quality factor Q.',
     circuitDescription: 'Parallel RLC with R=100Ω, C=10μF, resonant at f₀=1200Hz.',
-    circuitImage: '/circuits/parallel_rlc.png',
+    circuitSvg: { type: 'parallel_rlc', components: { r: '100Ω', c: '10μF', l: '1.76mH' } },
     detailedSteps: [
       { stepNumber: 1, label: 'Calculate resonant frequency in rad/s', calculation: 'ω₀ = 2πf₀ = 2π×1200 = 7539.8 rad/s', result: 'ω₀ = 7539.8 rad/s' },
       { stepNumber: 2, label: 'Apply parallel RLC Q formula', calculation: 'Q = ω₀RC = 7539.8 × 100 × 10×10⁻⁶ = 7539.8 × 10⁻³', result: 'Q = 7.54', isAnswer: true },
@@ -337,7 +337,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 7, label: 'Find VCE2 and verify active', calculation: 'VCE2 = VCC - IC2×RC2 - IE2×RE2 = 12 - 4.13(1) - 4.16(1) = 12 - 4.13 - 4.16', result: 'VCE2 = 3.71 V > 0.2V → Active ✓', isAnswer: true, isVerification: true },
     ],
     finalAnswers: ['IB1 = 59.5 μA, IC1 = 7.14 mA, VCE1 = 2.48 V (Active ✓)', 'IB2 = 34.4 μA, IC2 = 4.13 mA, VCE2 = 3.71 V (Active ✓)'],
-    circuitImage: '/circuits/bjt_2024feb_q3.png',
+    circuitSvg: { type: 'two_npn_cascade_2', components: { rb: '150kΩ', rc1: '1kΩ', re1: '330Ω', rc2: '1kΩ', re2: '1kΩ', vcc: '12V', beta: '120' }, labels: { t1: 'T₁', t2: 'T₂' } },
     keyTrap: 'VCE1 = 2.48V is barely active. If β were slightly higher or RE1 larger, Q1 would saturate — always check!',
   },
 
@@ -660,7 +660,7 @@ export const QUESTIONS: Question[] = [
       { stepNumber: 7, label: 'Find IC2 in saturation', calculation: 'IC2(sat) = (VCC2 - VCE(sat))/R2 = (10 - 0.2)/1k', result: 'IC2(sat) = 9.8 mA', isAnswer: true },
     ],
     finalAnswers: ['IC1 = 11.68 mA (Q1 active)', 'IC2 = 9.8 mA (Q2 saturated)'],
-    circuitImage: '/circuits/bjt_2024dec_q4.png',
+    circuitSvg: { type: 'pnp_npn_mixed', components: { rb: '60kΩ', r1: '1kΩ', r2: '1kΩ', vcc1: '15V', vcc2: '10V', alpha: '0.98', beta_npn: '100' } },
     keyTrap: 'pnp: use VEB = 0.7V, NOT VBE! IB = (VCC - VEB)/RB. When β×IB >> IC(sat), transistor saturates.',
   },
 
@@ -1037,7 +1037,6 @@ export const QUESTIONS: Question[] = [
     difficulty: 'medium',
     text: 'Find Vo in the given multi-stage op-amp circuit.',
     circuitDescription: 'Multiple op-amps connected in cascade. Apply golden rules to each stage.',
-    circuitImage: '/circuits/multi_opamp.png',
     detailedSteps: [
       { stepNumber: 1, label: 'Verify negative feedback on each op-amp', calculation: 'Output connected back to inverting input through feedback network', result: 'Negative feedback present ✓', isVerification: true },
       { stepNumber: 2, label: 'Apply Golden Rule 1: V+ = V-', calculation: 'Virtual short: both inputs at same voltage', result: 'V+ = V-' },
