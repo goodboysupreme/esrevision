@@ -4,7 +4,6 @@ import { FC, useState, useMemo } from 'react';
 import { TOPICS, YIELD_COLORS } from '@/data/topics';
 import { QUESTIONS, type Question, type YieldLevel, type Difficulty, type SolutionStep } from '@/data/questions';
 import TopicChart from './TopicChart';
-import CircuitDiagram from './CircuitDiagram';
 
 interface PyqVaultProps {
   onNavigate: (tabId: string) => void;
@@ -290,21 +289,15 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                             style={{ backgroundColor: topicBgColor, borderColor: topicColor + '40' }}
                           >
                             <div className="font-ui text-[10px] font-bold uppercase tracking-wider mb-2" style={{ color: topicColor }}>
-                              🔌 Circuit Diagram
+                              Circuit Diagram
                             </div>
                             <img
                               src={q.circuitImage}
                               alt={`Circuit diagram for ${q.questionNumber}`}
-                              className="w-full h-auto rounded"
-                              style={{ maxHeight: '320px', objectFit: 'contain' }}
+                              className="w-full h-auto rounded bg-white"
+                              style={{ maxHeight: '350px', objectFit: 'contain' }}
                             />
                           </div>
-                        ) : q.circuitSvg ? (
-                          <CircuitDiagram
-                            circuit={q.circuitSvg}
-                            topicColor={topicColor}
-                            topicBgColor={topicBgColor}
-                          />
                         ) : q.circuitDescription ? (
                           <div
                             className="rounded-lg p-4 border h-full"

@@ -153,3 +153,29 @@ Stage Summary:
 - 20 schemdraw-generated circuit diagram PNGs
 - Topic frequency chart with marks distribution across all exams
 - Parchment/academic archive design with EB Garamond + Merriweather fonts
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Fix circuit diagrams - replace broken SVG with PNG images
+
+Work Log:
+- Analyzed user screenshot showing broken SVG circuit diagrams with missing connections
+- Decided to switch from SVG (CircuitDiagram.tsx) to PNG images for reliability
+- Generated 32 circuit diagram types using Python schemdraw (3 scripts)
+- Generated 12 critical complex circuit diagrams using AI image generation (BJT cascades, Darlington, VDB, Zener, PF correction, MOSFET, op-amp, etc.)
+- Converted all JPEG-format AI images to proper PNG format
+- Updated questions.ts: replaced all 33 circuitSvg references with circuitImage paths
+- Added circuitImage for 11 questions that only had circuitDescription
+- Updated PyqVault.tsx: removed CircuitDiagram import, prioritized circuitImage over circuitSvg
+- Removed SVG fallback entirely (no more broken SVG rendering)
+- Added white background and increased max-height to 350px for better image display
+- Build verified: `npx next build` passes successfully
+- Dev server verified: All pages and images load with HTTP 200
+
+Stage Summary:
+- 54 circuit diagram PNGs in /public/circuits/ (32 schemdraw + 12 AI-generated + 10 legacy)
+- 37 questions now have circuitImage references (was 20 before)
+- No more broken SVG circuit rendering
+- AI-generated images cover: two_npn_cascade, two_npn_cascade_2, two_npn_cascade_sat, darlington, vdb_circuit, pnp_npn_mixed, zener_regulator, pf_correction, emosfet_simple, two_zener_parallel, half_wave_rectifier, y_3phase, opamp_multi_input
+- Site fully functional at http://localhost:3000
