@@ -292,7 +292,7 @@ const PyqVault: FC<PyqVaultProps> = ({ onNavigate }) => {
                               Circuit Diagram
                             </div>
                             <img
-                              src={q.circuitImage}
+                              src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}${q.circuitImage}`}
                               alt={`Circuit diagram for ${q.questionNumber}`}
                               className="w-full h-auto rounded bg-white"
                               style={{ maxHeight: '350px', objectFit: 'contain' }}
