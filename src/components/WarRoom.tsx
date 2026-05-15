@@ -2,23 +2,11 @@
 
 import { FC } from 'react';
 import TopicChart from './TopicChart';
-import { TOPICS, YIELD_COLORS } from '@/data/topics';
-
 interface WarRoomProps {
   onNavigate: (tabId: string) => void;
 }
 
 const WarRoom: FC<WarRoomProps> = ({ onNavigate }) => {
-  const includedTopics = TOPICS.filter(t => t.category !== 'excluded');
-  const postMidsem = includedTopics.filter(t => t.category === 'post-midsem');
-  const preMidsemExtra = includedTopics.filter(t => t.category === 'pre-midsem-extra');
-  const preMidsemCore = includedTopics.filter(t => t.category === 'pre-midsem-core');
-
-  const triageOrder = [
-    ...postMidsem.sort((a, b) => b.totalMarks - a.totalMarks),
-    ...preMidsemExtra.sort((a, b) => b.totalMarks - a.totalMarks),
-    ...preMidsemCore.sort((a, b) => b.totalMarks - a.totalMarks),
-  ];
 
   return (
     <div className="space-y-8">
@@ -64,63 +52,6 @@ const WarRoom: FC<WarRoomProps> = ({ onNavigate }) => {
           Grouped bar chart showing marks per topic across 6 comprehensive exams (July 2023 – Dec 2025)
         </p>
         <TopicChart showExcluded={true} height={450} />
-      </div>
-
-      {/* 48hr Triage */}
-      <div className="bg-cream border-[3px] border-navy rounded-lg p-6 shadow-sm">
-        <h2 className="font-heading text-2xl font-bold text-navy mb-2">
-          ⚔️ 48-Hour Triage — Priority Order
-        </h2>
-        <p className="font-ui text-sm text-muted-text mb-4">
-          Higher weightage: Post-midsem topics. Among pre-midsem: emphasis on topics NOT in midsem (Transients, Filters).
-        </p>
-
-        <div className="space-y-3">
-          {triageOrder.map((topic, idx) => (
-            <div
-              key={topic.id}
-              className="flex items-center gap-3 bg-parchment rounded-lg p-3 hover:shadow-md transition-shadow"
-            >
-              <div
-                className="font-ui text-xl font-bold w-8 h-8 rounded-full flex items-center justify-center text-cream"
-                style={{ backgroundColor: topic.color }}
-              >
-                {idx + 1}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-heading font-bold text-navy">{topic.name}</span>
-                  <span
-                    className="font-ui text-[10px] font-semibold px-2 py-0.5 rounded-full text-cream"
-                    style={{ backgroundColor: topic.category === 'post-midsem' ? '#059669' : topic.category === 'pre-midsem-extra' ? '#d97706' : '#64748b' }}
-                  >
-                    {topic.categoryLabel}
-                  </span>
-                  <span
-                    className="font-ui text-[10px] font-semibold px-2 py-0.5 rounded-full text-cream"
-                    style={{ backgroundColor: YIELD_COLORS[topic.yieldLevel] }}
-                  >
-                    {topic.yieldLabel}
-                  </span>
-                </div>
-                <div className="font-ui text-xs text-muted-text mt-0.5">
-                  {topic.examsAppeared}/5 exams · {topic.totalMarks} total marks
-                </div>
-              </div>
-              <div
-                className="w-20 h-3 rounded-full overflow-hidden bg-secondary"
-              >
-                <div
-                  className="h-full rounded-full"
-                  style={{
-                    width: `${Math.min((topic.totalMarks / 101) * 100, 100)}%`,
-                    backgroundColor: topic.color,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Quick Links */}
